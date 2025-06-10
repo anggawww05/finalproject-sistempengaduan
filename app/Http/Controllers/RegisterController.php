@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 
 class RegisterController extends Controller
 {
@@ -11,24 +13,22 @@ class RegisterController extends Controller
         return view('auth.register');
     }
 
-    // public function register(Request $request)
-    // {
-    //     // Validate the request data
-    //     $request->validate([
-    //         'name' => 'required|string|max:255',
-    //         'email' => 'required|string|email|max:255|unique:users',
-    //         'password' => 'required|string|min:8|confirmed',
-    //     ]);
+    public function store(Request $request)
+    {
+        $id_user = 1;
+        // dd($request->all());
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|confirmed',
+        ]);
 
-    //     // Create the user
-    //     $user = \App\Models\User::create([
-    //         'name' => $request->name,
-    //         'email' => $request->email,
-    //         'password' => bcrypt($request->password),
-    //     ]);
-
-    //     // Redirect to a specific route after registration
-    //     return redirect()->route('login')->with('success', 'Registration successful! Please log in.');
-    // }
-
+        $user = User::create([
+            'id_user' => $id_user,
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+        ]);
+        return redirect('/login');
+    }
 }

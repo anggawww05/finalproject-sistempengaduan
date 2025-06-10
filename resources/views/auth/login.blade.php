@@ -35,7 +35,7 @@
                 <label for="remember-me" class="ml-2 text-sm">Ingat aku</label>
             </div>
             <div class="flex justify-between mb-4 flex-col gap-2">
-                <a href="#" class="text-sm text-[#A91D3A] hover:underline">Lupa Password?</a>
+                {{-- <a href="#" class="text-sm text-[#A91D3A] hover:underline">Lupa Password?</a> --}}
                 <button type="submit"
                     class="bg-[#A91D3A] hover:bg-[#CA3453] text-white px-6 py-2 rounded-2xl focus:outline-none w-full">Daftar</button>
             </div>
