@@ -5,7 +5,7 @@
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707L15 13.414V19a1 1 0 01-1.447.894l-4-2A1 1 0 019 17v-3.586L3.293 6.707A1 1 0 013 6V4z" />
                 </svg>
-                <h2 class="text-[20px] font-semibold text-center">Filter Pengaduan</h2>
+                <h2 class="text-[20px] font-semibold text-center">Filter Berita</h2>
             </div>
             <hr>
             <div class="my-6">

@@ -16,7 +16,8 @@
         </div>
         <h1 class="text-[30px] font-semibold text-center">Halo!</h1>
         <p class="text-center mb-4">Silahkan lengkapi data untuk masuk pada akun.</p>
-        <form action="#" method="POST" class="flex flex-col gap-2">
+        <form action="{{route('login.authenticate')}}" method="POST" class="flex flex-col gap-2">
+            @csrf
             <div>
                 <label for="email" class="block text-sm font-medium">Email</label>
                 <input type="email" id="email" name="email"
@@ -29,18 +30,18 @@
                     class="w-full mt-2 p-2 rounded-black text-white border border-gray-600 rounded-2xl focus:border-[#A91D3A]"
                     required>
             </div>
-            <div class="flex items-center mb-4">
+            {{-- <div class="flex items-center mb-4">
                 <input type="checkbox" id="remember-me" name="remember-me"
                     class="h-4 w-4 text-[#A91D3A] border-gray-600 rounded-md focus:ring-0">
                 <label for="remember-me" class="ml-2 text-sm">Ingat aku</label>
-            </div>
+            </div> --}}
             <div class="flex justify-between mb-4 flex-col gap-2">
                 {{-- <a href="#" class="text-sm text-[#A91D3A] hover:underline">Lupa Password?</a> --}}
                 <button type="submit"
                     class="bg-[#A91D3A] hover:bg-[#CA3453] text-white px-6 py-2 rounded-2xl focus:outline-none w-full">Daftar</button>
             </div>
-            <p class="text-center text-sm">Sudah memiliki akun?
-                <a href="#" class="text-[#A91D3A] hover:underline">Login disini
+            <p class="text-center text-sm">Tidak memiliki akun?
+                <a href="{{route('register')}}" class="text-[#A91D3A] hover:underline">Daftar disini
                 </a>
             </p>
         </form>

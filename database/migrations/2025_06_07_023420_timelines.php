@@ -13,9 +13,11 @@ return new class extends Migration
     {
         Schema::create('timelines', function (Blueprint $table) {
             $table->id();
-            $table->string('title');
+            $table->enum('status', ['Pengaduan Diterima', 'Ditugaskan ke Departemen', 'Investigasi ke Lapangan', 'Tindakan Eksekusi', 'Selesai'])->default('Pengaduan Diterima')->nullable();
+            $table->text('additional')->nullable();
+            $table->integer('order')->default(1);
             $table->timestamps();
-            // $table->foreignId('report_id')->constrained()->onDelete('cascade');
+            $table->foreignId('report_id')->constrained()->onDelete('cascade');
         });
     }
 

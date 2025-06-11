@@ -7,11 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 class Report extends Model
 {
     protected $fillable = [
+        'ticket_number',
         'title',
         'description',
         'photo',
-        'category_id',
+        'status',
+        'available',
         'user_id',
+        'category_id',
     ];
 
     public function users()

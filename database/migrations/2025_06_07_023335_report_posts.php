@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description');
-            $table->text('photo')->nullable();
-            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->bigInteger('revision_by')->nullable();
+            // $table->text('photo')->nullable();
             $table->timestamps();
             $table->foreignId('report_id')->constrained()->onDelete('cascade');
         });

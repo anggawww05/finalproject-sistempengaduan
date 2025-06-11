@@ -10,7 +10,6 @@ class ReportPost extends Model
         'title',
         'description',
         'photo',
-        'status',
         'like_id',
         'report_id',
         'user_id',

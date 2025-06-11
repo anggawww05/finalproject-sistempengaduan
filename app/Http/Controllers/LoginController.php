@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LoginController extends Controller
 {
@@ -11,21 +12,28 @@ class LoginController extends Controller
         return view('auth.login');
     }
 
-    public function login(Request $request)
+    public function authenticate(Request $request)
     {
-        // // Validate the request data
-        // $request->validate([
-        //     'email' => 'required|email',
-        //     'password' => 'required|min:6',
-        // ]);
+        $credentials = $request->validate(
+            [
+                'email' => ['required', 'email'],
+                'password' => ['required'],
+            ],
+            [
+                'email.required' => 'Email tidak boleh kosong.',
+                'email.email' => 'Email tidak valid.',
+                'password.required' => 'Password tidak boleh kosong.',
+            ]
+        );
 
-        // // Attempt to log the user in
-        // if (auth()->attempt($request->only('email', 'password'))) {
-        //     // Redirect to the intended page or home
-        //     return redirect()->intended('/home');
-        // }
+        if (Auth::attempt($credentials)) {
+            $request->session()->regenerate();
+            if (Auth::user()->role_id == 1) {
+                return redirect()->intended('/beranda');
+            }
+            return redirect()->intended('/');
+        }
 
-        // // If login fails, redirect back with an error message
-        // return redirect()->back()->withErrors(['email' => 'Invalid credentials'])->withInput();
+        return redirect()->back()->with('error', 'Data yang dimasukkan tidak sesuai/tidak terdaftar.');
     }
 }

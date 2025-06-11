@@ -37,8 +37,8 @@
                     required>
             </div>
             <div>
-                <label for="confirm-password" class="block text-sm font-medium">Konfirmasi Kata Sandi</label>
-                <input type="password" id="confirm-password" name="confirm-password"
+                <label for="password_confirmation" class="block text-sm font-medium">Konfirmasi Kata Sandi</label>
+                <input type="password" id="password_confirmation" name="password_confirmation"
                     class="w-full mt-2 p-2 rounded-black text-white border border-gray-600 rounded-2xl focus:border-[#A91D3A]"
                     required>
             </div>
