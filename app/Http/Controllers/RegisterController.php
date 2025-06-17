@@ -23,7 +23,7 @@ class RegisterController extends Controller
         ]);
         // dd($request->all());
 
-        $user = User::create([
+        User::create([
             'role_id' => $role,
             'name' => $request->name,
             'email' => $request->email,

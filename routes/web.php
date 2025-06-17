@@ -3,6 +3,7 @@
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\PageController;
+use App\Http\Controllers\ReportController;
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/', function () {
@@ -17,6 +18,7 @@ Route::post('/login', [LoginController::class, 'authenticate'])->name('login.aut
 Route::get('/beranda', [PageController::class, 'viewLanding'])->name('landing.page');
 Route::get('/pengaduan', [PageController::class, 'viewPengaduan'])->name('pengaduan.page');
 Route::get('/pengaduan/detail-pengaduan', [PageController::class, 'viewDetailPengaduan'])->name('detail.pengaduan.page');
-Route::get('/pengaduan/formulir-akademik', [PageController::class, 'viewForm1'])->name('formulir.akademik.page');
+Route::get('/pengaduan/formulir-akademik', [ReportController::class, 'viewForm'])->name('formulir.akademik.page');
+Route::post('/pengaduan/formulir-akademik', [ReportController::class, 'store'])->name('formulir.akademik.store');
 Route::get('/pengaduan/formulir-akademik/menunggu-verifikasi', [PageController::class, 'viewPostSubmit'])->name('formulir.akademik.postsubmit.page');
 Route::get('/berita', [PageController::class, 'viewNews'])->name('news.page');

@@ -22,11 +22,11 @@ class PageController extends Controller
         return view('user.detailpengaduan');
     }
 
-    public function viewForm1()
-    {
-        $category = Category::all();
-        return view('user.formulirakademik', compact('category'));
-    }
+    // public function viewForm1()
+    // {
+    //     $category = Category::all();
+    //     return view('user.formulirakademik', compact('category'));
+    // }
 
     public function viewPostSubmit()
     {

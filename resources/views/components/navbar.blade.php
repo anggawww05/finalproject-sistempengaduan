@@ -21,11 +21,11 @@
                 </li>
                 <li>
                     <a href="{{ route('news.page') }}"
-                        class="block py-2 px-3 text-white bg-[#141414] text-[16px] hover:underline">Berita</a>
+                        class="block py-2 px-3 text-white bg-[#141414] text-[16px] hover:underline @if (Route::is('news.page')) underline @endif">Berita</a>
                 </li>
                 <li>
                     <a href="{{ route('pengaduan.page') }}"
-                        class="block py-2 px-3 text-white bg-[#141414] text-[16px] hover:underline">Pengaduan</a>
+                        class="block py-2 px-3 text-white bg-[#141414] text-[16px] hover:underline @if (Route::is('pengaduan.page')) underline @endif">Pengaduan</a>
                 </li>
                 <li>
                     <a href="#"
