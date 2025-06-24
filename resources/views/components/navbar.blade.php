@@ -28,8 +28,8 @@
                         class="block py-2 px-3 text-white bg-[#141414] text-[16px] hover:underline @if (Route::is('pengaduan.page')) underline @endif">Pengaduan</a>
                 </li>
                 <li>
-                    <a href="#"
-                        class="block py-2 px-3 text-white bg-[#141414] text-[16px] hover:underline">Status</a>
+                    <a href="{{ route('timeline.page') }}"
+                        class="block py-2 px-3 text-white bg-[#141414] text-[16px] hover:underline @if (Route::is('timeline.page')) underline @endif">Status</a>
                 </li>
             </ul>
         </div>

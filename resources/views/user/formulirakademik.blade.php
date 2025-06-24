@@ -13,13 +13,22 @@
                     Kembali
                 </a>
             </div>
+            @if ($errors->any())
+                @foreach ($errors->all() as $error)
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative"
+                        role="alert">
+                        <strong class="font-bold">Error!</strong>
+                        <span class="block sm:inline">{{ $error }}</span>
+                    </div>
+                @endforeach
+            @endif
             <form action="{{ route('formulir.akademik.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class=" bg-white rounded-lg shadow-md p-4  border-1 border-gray-300 flex flex-col gap-1 ">
                     <h1 class="flex justify-center text-[20px] font-semibold">Formulir Pengaduan Akademik</h1>
                     <div class="p-6 flex flex-col gap-4">
                         <label for="">Kategori<span class="text-red-500">*</span>
-                            <select name="category" id="category"
+                            <select name="category_id" id="category_id"
                                 class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#141414] mt-1">
                                 <option value="" disabled selected>Pilih kategori</option>
                                 @foreach ($category as $categoryitem)
@@ -29,7 +38,7 @@
                         </label>
                         <div class="flex flex-col gap-1">
                             <label for="" class="text-[16px]">Judul <span class="text-red-500">*</span></label>
-                            <input type="text" name="judul" id="judul"
+                            <input type="text" name="title" id="title"
                                 class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#141414]">
                         </div>
                         <div class="flex flex-col gap-1">
@@ -45,14 +54,14 @@
                             <input type="file" name="photo" id="photo" accept="image/*"
                                 class="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#141414]">
                         </div>
-                        <div>
-                            {{-- <button class="w-full py-2 px-4 bg-[#141414] text-white rounded-lg hover:bg-[#2B2B2B] transition-colors duration-200" type="submit">
+                        <button
+                            class="w-full py-2 px-4 bg-[#141414] text-white rounded-lg hover:bg-[#2B2B2B] transition-colors duration-200"
+                            type="submit">
                             Kirim Pengaduan
-                        </button> --}}
-                            <a href="{{ route('formulir.akademik.postsubmit.page') }}"
+                        </button>
+                        {{-- <a href="{{ route('formulir.akademik.postsubmit.page') }}"
                                 class="w-full py-2 px-4 bg-[#141414] text-white rounded-lg hover:bg-[#2B2B2B] transition-colors duration-200">Kirim
-                                Pengaduan</a>
-                        </div>
+                                Pengaduan</a> --}}
                     </div>
                 </div>
             </form>

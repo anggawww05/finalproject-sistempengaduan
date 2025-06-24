@@ -6,6 +6,7 @@ use App\Models\Report;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class ReportController extends Controller
 {
@@ -17,29 +18,28 @@ class ReportController extends Controller
 
     public function store(Request $request)
     {
-        // Validasi input
+        $user = Auth::user();
         $validated = $request->validate([
-            'ticket_number' => 'nullable|string|max:255',
             'title' => 'required|string|max:255',
             'description' => 'required|string',
-            'photo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
-            'status' => 'in:pending,approved,rejected',
-            'available' => 'nullable|in:public,private',
+            'photo' => 'required|image|mimes:jpg,jpeg,png|max:2048',
             'category_id' => 'required|exists:categories,id',
         ]);
 
-        // Upload file jika ada
+        $reportCount = Report::where('status', 'approve')->count() + 1;
+        $reportNumber = str_pad($reportCount, 3, '0', STR_PAD_LEFT);
+        $date = date('dmY');
+        $random = strtoupper(Str::random(4));
+        $validated['ticket_number'] = 'SIPMA-' . $reportNumber . '-' . $date . '-' . $random;
+        $validated['status'] = 'pending';
+        $validated['available'] = null;
+        $validated['user_id'] = $user->id;
         if ($request->hasFile('photo')) {
             $validated['photo'] = $request->file('photo')->store('photos', 'public');
         }
 
-        // Tambahkan user_id dari user yang sedang login
-        $validated['user_id'] = Auth::id();
-
-        // Simpan ke database
         Report::create($validated);
 
-        // Redirect atau response
         return redirect()->back()->with('success', 'Pengaduan berhasil dikirim.');
     }
 }
