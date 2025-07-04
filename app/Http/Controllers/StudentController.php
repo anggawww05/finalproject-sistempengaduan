@@ -139,4 +139,22 @@ class StudentController extends Controller
 
         return redirect(route('dashboard.student.index'))->with('success', 'Berhasil menghapus akun siswa!');
     }
+
+    public function indexProfile()
+    {
+        return view('user.profile');
+    }
+
+    public function indexSubmissions()
+    {
+        // Logic to retrieve and display student submissions
+        return view('user.submissionlist');
+    }
+
+    public function indexEditProfile()
+    {
+        // Logic to retrieve and display the edit profile form
+        return view('user.editprofile');
+    }
+
 }

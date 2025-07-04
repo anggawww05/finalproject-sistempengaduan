@@ -6,6 +6,7 @@ use App\Http\Controllers\LoginController;
 use App\Http\Controllers\OperatorAkademikController;
 use App\Http\Controllers\PageController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\StudentController;
 use App\Http\Controllers\TimelineController;
 use Illuminate\Support\Facades\Route;
 
@@ -100,6 +101,9 @@ Route::post('/pengaduan/formulir-akademik', [ReportController::class, 'store'])-
 Route::get('/berita', [PageController::class, 'viewNews'])->name('news.page');
 Route::get('/timeline', [TimelineController::class, 'indexTimeline'])->name('timeline.page');
 Route::get('/timeline/detail', [TimelineController::class, 'indexDetailTimeline'])->name('timeline.detail.page');
+Route::get('/profile', [StudentController::class, 'indexProfile'])->name('profile.page');
+Route::get('/profile/submissions-list', [StudentController::class, 'indexSubmissions'])->name('submissions.page');
+Route::get('/profile/edit-profile', [StudentController::class, 'indexEditProfile'])->name('edit.profile.page');
 
 
 //operator akademik

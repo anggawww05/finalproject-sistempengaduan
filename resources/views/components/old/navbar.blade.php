@@ -8,7 +8,7 @@
                 <a href="{{ route('login.index') }}"
                     class="text-[#A91D3A] border-2 border-[#A91D3A] rounded-lg py-1 px-6 hover:bg-[#A91D3A] hover:text-white text-[16px]">Masuk</a>
             @else
-                <a href="# "
+                <a href="{{ route('profile.page') }}"
                     class="bg-[#A91D3A] py-1 px-6 rounded-lg text-white hover:bg-[#CA3453] text-[16px]">Profil</a>
             @endif
         </div>
