@@ -3,9 +3,9 @@
         <img src="{{ asset('images/full-logo-sipma.png') }}" alt="Rekonser logo" class="h-6">
         <div class="flex flex-row justify-end order-2 gap-2">
             @if (!auth()->user())
-                <a href="{{ route('register') }}"
+                <a href="{{ route('register.index') }}"
                     class="bg-[#A91D3A] py-1 px-6 rounded-lg text-white hover:bg-[#CA3453] text-[16px]">Daftar</a>
-                <a href="{{ route('login') }}"
+                <a href="{{ route('login.index') }}"
                     class="text-[#A91D3A] border-2 border-[#A91D3A] rounded-lg py-1 px-6 hover:bg-[#A91D3A] hover:text-white text-[16px]">Masuk</a>
             @else
                 <a href="# "
