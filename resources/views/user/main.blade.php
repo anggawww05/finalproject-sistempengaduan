@@ -8,10 +8,10 @@
     @vite('resources/css/app.css')
 </head>
 <body>
-    @include('components.navbar')
-    <main>
-        @yield('content')
-    </main>
-    @include('components.footer')
+@include('components.old.navbar')
+<main>
+    @yield('content')
+</main>
+@include('components.old.footer')
 </body>
 </html>

@@ -3,16 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Timeline extends Model
 {
-    protected $fillable = [
-        'title',
-        'description',
-        'report_id',
-    ];
+    use SoftDeletes;
 
-    public function Report()
+    protected $guarded = ['id'];
+
+    public function report()
     {
         return $this->belongsTo(Report::class);
     }

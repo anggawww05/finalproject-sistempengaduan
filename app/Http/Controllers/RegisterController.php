@@ -2,33 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\RegisterStoreRequest;
+use App\Models\Student;
 use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\View\View;
 
 class RegisterController extends Controller
 {
-    public function view()
+    public function index(): View
     {
-        return view('auth.register');
+        return view('auth.register', [
+            'title' => 'Halaman Register'
+        ]);
     }
 
-    public function store(Request $request)
+    public function store(RegisterStoreRequest $request)
     {
-        $role = 1;
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required|email',
-            'password' => 'required|confirmed',
-        ]);
-        // dd($request->all());
-
-        User::create([
-            'role_id' => $role,
-            'name' => $request->name,
+        $student = Student::create();
+        $user = User::create([
+            'username' => $request->username,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => bcrypt($request->password),
+            'student_id' => $student->id,
         ]);
-        return redirect('/login');
+        if ($user) return redirect(route('login.index'))->with('success', 'Berhasil mendaftar akun siswa!');
+        return redirect(route('register.index'))->with('failed', 'Gagal mendaftar akun siswa!');
     }
 }

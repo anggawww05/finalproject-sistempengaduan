@@ -3,31 +3,26 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ReportPost extends Model
 {
-    protected $fillable = [
-        'title',
-        'description',
-        'photo',
-        'like_id',
-        'report_id',
-        'user_id',
-    ];
+    use SoftDeletes;
 
-    public function reports()
+    protected $guarded = ['id'];
+
+    public function report()
     {
-        return $this->belongsTo(Report::class, 'report_id');
+        return $this->belongsTo(Report::class);
     }
 
     public function likes()
     {
-        return $this->hasOne(Like::class);
+        return $this->hasMany(Like::class);
     }
 
     public function comments()
     {
         return $this->hasMany(Comment::class);
     }
-
 }

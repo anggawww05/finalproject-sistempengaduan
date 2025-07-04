@@ -2,38 +2,37 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginStoreRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class LoginController extends Controller
 {
-    public function view()
+    public function index(): View
     {
-        return view('auth.login');
+        return view('auth.login', [
+            'title' => 'Halaman Login'
+        ]);
     }
 
-    public function authenticate(Request $request)
+    public function store(LoginStoreRequest $request)
     {
-        $credentials = $request->validate(
-            [
-                'email' => ['required', 'email'],
-                'password' => ['required'],
-            ],
-            [
-                'email.required' => 'Email tidak boleh kosong.',
-                'email.email' => 'Email tidak valid.',
-                'password.required' => 'Password tidak boleh kosong.',
-            ]
-        );
-
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($request->validated())) {
             $request->session()->regenerate();
-            if (Auth::user()->role_id == 1) {
-                return redirect()->intended('/beranda');
+            if (auth()->user()->student_id) {
+                return redirect(route('main.index'));
             }
-            return redirect()->intended('/');
+            return redirect(route('dashboard.index'));
         }
+        return redirect(route('login.index'))->with('failed', 'Email atau Password tidak ditemukan!');
+    }
 
-        return redirect()->back()->with('error', 'Data yang dimasukkan tidak sesuai/tidak terdaftar.');
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        return redirect()->route('login.index')->with('success', 'Berhasil logout akun!');
     }
 }

@@ -3,15 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Category extends Model
 {
-    protected $fillable = [
-        'category_name',
-    ];
+    use SoftDeletes;
 
-    public function Reports()
+    protected $guarded = ['id'];
+
+    public function reports()
     {
-        return $this->belongsTo(ReportPost::class);
+        return $this->hasMany(Report::class);
     }
 }

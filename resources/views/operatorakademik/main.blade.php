@@ -10,13 +10,13 @@
 </head>
 
 <body>
-    <div>
-        @include('components.asideoperatorakademik')
-        @include('components.navbaroperator')
-        <main>
-            @yield('content')
-        </main>
-    </div>
+<div>
+    @include('components.old.asideoperatorakademik')
+    @include('components.old.navbaroperator')
+    <main>
+        @yield('content')
+    </main>
+</div>
 </body>
 
 </html>

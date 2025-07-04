@@ -10,13 +10,13 @@
 </head>
 
 <body>
-    <div>
-        @include('components.asideadmin')
-        @include('components.navbaradmin')
-        <main>
-            @yield('content')
-        </main>
-    </div>
+<div>
+    @include('components.old.asideadmin')
+    @include('components.old.navbaradmin')
+    <main>
+        @yield('content')
+    </main>
+</div>
 </body>
 
 </html>

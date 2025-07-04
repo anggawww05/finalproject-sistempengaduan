@@ -13,15 +13,16 @@ return new class extends Migration
     {
         Schema::create('reports', function (Blueprint $table) {
             $table->id();
-            $table->string('ticket_number')->nullable();
+            $table->bigInteger('user_id')->index();
+            $table->bigInteger('category_id')->index();
+            $table->text('image_path');
+            $table->string('ticket_number');
             $table->string('title');
             $table->text('description');
-            $table->text('photo')->nullable();
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
-            $table->enum('available', ['public', 'private'])->nullable();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->enum('available', ['public', 'private'])->default('private');
             $table->timestamps();
-            $table->foreignId('category_id')->constrained()->onDelete('cascade');
+            $table->softDeletes();
         });
     }
 

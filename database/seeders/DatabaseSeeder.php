@@ -15,49 +15,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        Role::create([
-            'role_name' => 'User',
-        ]);
-
-        Role::create([
-            'role_name' => 'Operator_Akademik',
-        ]);
-
-        Role::create([
-            'role_name' => 'Operator_Kemahasiswaan',
-        ]);
-
-        Role::create([
-            'role_name' => 'Operator_Fasilitas',
-        ]);
-
-        Role::create([
-            'role_name' => 'Operator_Pelecehan',
-        ]);
-
-        Role::create([
-            'role_name' => 'Admin',
-        ]);
-
-        // Category::create([
-        //     'category_name' => 'Pilih kategori pengaduan',
-        // ]);
-
-        Category::create([
-            'category_name' => 'Akademik',
-        ]);
-
-        Category::create([
-            'category_name' => 'Kemahasiswaan',
-        ]);
-
-        Category::create([
-            'category_name' => 'Fasilitas',
-        ]);
-
-        Category::create([
-            'category_name' => 'Pelecehan',
-        ]);
-
+        $this->call(AdminSeeder::class);
+        $this->call(OperatorSeeder::class);
+        $this->call(StudentSeeder::class);
+        $this->call(UserSeeder::class);
+        $this->call(CategorySeeder::class);
     }
 }

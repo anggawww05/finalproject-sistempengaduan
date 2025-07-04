@@ -11,14 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('blogs', function (Blueprint $table) {
+        Schema::create('timelines', function (Blueprint $table) {
             $table->id();
+            $table->bigInteger('report_id')->index();
             $table->string('title');
             $table->text('description');
-            $table->text('blog_photo')->nullable();
+            $table->string('status');
+            $table->integer('order')->default(1);
             $table->timestamps();
-            $table->foreignId('report_id')->constrained()->onDelete('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->softDeletes();
+//            $table->enum('status', ['Pengaduan Diterima', 'Ditugaskan ke Departemen', 'Investigasi ke Lapangan', 'Tindakan Eksekusi', 'Selesai'])->default('Pengaduan Diterima')->nullable();
         });
     }
 
@@ -27,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('blogs');
+        Schema::dropIfExists('timelines');
     }
 };

@@ -3,19 +3,13 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Report extends Model
 {
-    protected $fillable = [
-        'ticket_number',
-        'title',
-        'description',
-        'photo',
-        'status',
-        'available',
-        'user_id',
-        'category_id',
-    ];
+    use SoftDeletes;
+
+    protected $guarded = ['id'];
 
     public function user()
     {
@@ -27,13 +21,13 @@ class Report extends Model
         return $this->belongsTo(Category::class);
     }
 
-    public function ReportPosts()
-    {
-        return $this->hasOne(ReportPost::class);
-    }
-
     public function timelines()
     {
         return $this->hasMany(Timeline::class);
+    }
+
+    public function report_post()
+    {
+        return $this->hasOne(ReportPost::class);
     }
 }
