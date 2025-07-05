@@ -14,9 +14,11 @@
     @endif
     <form method="GET" class="mb-4 flex items-center gap-[8px]">
         <input type="text" id="search" name="search" value="{{ $search }}" placeholder="Cari operator..." class="w-full p-3 rounded-black text-[#0d1117] border border-[#0d1117]/[0.12] rounded-[4px]">
-        <a href="{{ route('dashboard.operator.create') }}" class="text-nowrap bg-[#A91D3A] hover:bg-[#CA3453] text-white p-3 rounded-[4px] focus:outline-none text-[0.875rem] border w-fit">
-            Tambah Operator
-        </a>
+        @if(auth()->user()->admin_id)
+            <a href="{{ route('dashboard.operator.create') }}" class="text-nowrap bg-[#A91D3A] hover:bg-[#CA3453] text-white p-3 rounded-[4px] focus:outline-none text-[0.875rem] border w-fit">
+                Tambah Operator
+            </a>
+        @endif
     </form>
     <div class="relative overflow-x-auto border border-[#0d1117]/[0.12] rounded-[4px]">
         <table class="w-full text-sm text-left rtl:text-right text-gray-500">
@@ -57,23 +59,18 @@
                             {{ $operator->phone_number }}
                         </td>
                         <td class="px-6 py-4">
-                            @if($operator->type === 'academic')
-                                Akademik
-                            @elseif($operator->type === 'student_affair')
-                                Kemahasiswaan
-                            @elseif($operator->type === 'facility')
-                                Fasilitas
-                            @elseif($operator->type === 'harassment')
-                                Pelecehan
-                            @endif
+                            {{ $operator->type }}
                         </td>
                         <td class="px-6 py-4 text-right flex items-center gap-[8px]">
                             <a href="{{ route('dashboard.operator.show', $operator) }}" class="font-medium text-blue-600 hover:underline">Detail</a>
-                            <a href="{{ route('dashboard.operator.edit', $operator) }}" class="font-medium text-yellow-600 hover:underline">Edit</a>
-                            <form action="{{ route('dashboard.operator.destroy', $operator) }}" method="POST">
-                                @csrf
-                                <button type="submit" class="font-medium text-red-600 hover:underline" onclick="confirm('Apakah anda yakin ingin menghapus operator ini?')">Hapus</button>
-                            </form>
+                            @if(auth()->user()->admin_id)
+                                <a href="{{ route('dashboard.operator.edit', $operator) }}" class="font-medium text-yellow-600 hover:underline">Edit</a>
+                                <form action="{{ route('dashboard.operator.destroy', $operator) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="font-medium text-red-600 hover:underline" onclick="return confirm('Apakah anda yakin ingin menghapus operator ini?')">Hapus</button>
+                                </form>
+                            @endif
                         </td>
                     </tr>
                 @endforeach

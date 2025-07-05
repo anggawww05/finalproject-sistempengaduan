@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Report extends Model
+class Submission extends Model
 {
     use SoftDeletes;
 
@@ -26,8 +26,8 @@ class Report extends Model
         return $this->hasMany(Timeline::class);
     }
 
-    public function report_post()
+    public function submission_post()
     {
-        return $this->hasOne(ReportPost::class);
+        return $this->hasOne(SubmissionPost::class);
     }
 }

@@ -11,8 +11,8 @@ class Timeline extends Model
 
     protected $guarded = ['id'];
 
-    public function report()
+    public function submission()
     {
-        return $this->belongsTo(Report::class);
+        return $this->belongsTo(Submission::class);
     }
 }

@@ -44,7 +44,7 @@ class User extends Authenticatable
 
     public function reports()
     {
-        return $this->hasMany(Report::class);
+        return $this->hasMany(Submission::class);
     }
 
     public function likes()
@@ -60,5 +60,13 @@ class User extends Authenticatable
     public function blogs()
     {
         return $this->hasMany(Blog::class);
+    }
+
+    public function hasRole(): ?string
+    {
+        if (!is_null($this->admin_id)) return 'admin';
+        if (!is_null($this->operator_id)) return 'operator';
+        if (!is_null($this->student_id)) return 'student';
+        return null;
     }
 }

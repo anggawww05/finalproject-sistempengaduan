@@ -24,13 +24,19 @@
                     <label for="email" class="block text-sm font-medium">Email</label>
                     <input type="email" id="email" name="email"
                            class="w-full mt-2 p-3 rounded-black text-white border border-white/[0.12] rounded-[4px]"
-                           required>
+                           required placeholder="Enter your email...">
+                    @error('email')
+                    <p class="message-error text-red-600 mt-1 text-[0.875rem]">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div>
                     <label for="password" class="block text-sm font-medium">Kata Sandi</label>
                     <input type="password" id="password" name="password"
                            class="w-full mt-2 p-3 rounded-black text-white border border-white/[0.12] rounded-[4px]"
-                           required>
+                           required placeholder="Enter your password...">
+                    @error('password')
+                    <p class="message-error text-red-600 mt-1 text-[0.875rem]">{{ $message }}</p>
+                    @enderror
                 </div>
                 <div class="flex justify-between mt-4 mb-4">
                     <button type="submit"

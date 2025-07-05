@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
-use App\Models\Report;
+use App\Models\Submission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -15,8 +15,8 @@ class DashboardController extends Controller
     {
         $currentMonth = Carbon::now()->month;
         $currentYear = Carbon::now()->year;
-        $reportYear = [];
-        $reportMonth = [];
+        $submissionYear = [];
+        $submissionMonth = [];
 
         $months = [
             1 => 'Jan', 2 => 'Feb', 3 => 'Mar', 4 => 'Apr',
@@ -30,30 +30,30 @@ class DashboardController extends Controller
             'Minggu 4' => [Carbon::create($currentYear, $currentMonth, 22), Carbon::create($currentYear, $currentMonth, Carbon::create($currentYear, $currentMonth)->endOfMonth()->day)],
         ];
 
-        $reportYearValue = Report::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+        $submissionYearValue = Submission::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
             ->groupBy(DB::raw('MONTH(created_at)'))
             ->pluck('total', 'month');
 
         foreach ($months as $monthNumber => $monthName) {
-            $reportYear[$monthName] = $reportYearValue[$monthNumber] ?? 0;
+            $submissionYear[$monthName] = $submissionYearValue[$monthNumber] ?? 0;
         }
 
         foreach ($weeks as $label => [$start, $end]) {
-            $count = Report::whereBetween('created_at', [$start->startOfDay(), $end->endOfDay()])->count();
-            $reportMonth[$label] = $count;
+            $count = Submission::whereBetween('created_at', [$start->startOfDay(), $end->endOfDay()])->count();
+            $submissionMonth[$label] = $count;
         }
 
-        $reportCategory = Category::withCount('reports')
+        $submissionCategory = Category::withCount('submissions')
             ->get()
             ->mapWithKeys(function ($category) {
-                return [$category->name => $category->reports_count];
+                return [$category->name => $category->submissions_count];
             });
 
         return view('dashboard.index', [
             'title' => 'Halaman Dashboard',
-            'report_year' => $reportYear,
-            'report_month' => $reportMonth,
-            'report_category' => $reportCategory,
+            'submission_year' => $submissionYear,
+            'submission_month' => $submissionMonth,
+            'submission_category' => $submissionCategory,
             'categories' => Category::all(),
         ]);
     }

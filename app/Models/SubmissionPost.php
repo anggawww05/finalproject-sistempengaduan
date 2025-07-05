@@ -5,15 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ReportPost extends Model
+class SubmissionPost extends Model
 {
     use SoftDeletes;
 
     protected $guarded = ['id'];
 
-    public function report()
+    public function submission()
     {
-        return $this->belongsTo(Report::class);
+        return $this->belongsTo(Submission::class);
     }
 
     public function likes()

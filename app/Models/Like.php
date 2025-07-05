@@ -16,8 +16,8 @@ class Like extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function report_post()
+    public function submission_post()
     {
-        return $this->belongsTo(ReportPost::class);
+        return $this->belongsTo(SubmissionPost::class);
     }
 }

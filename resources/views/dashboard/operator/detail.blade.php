@@ -5,7 +5,7 @@
         <div class="lg:col-span-2">
             <label for="image_path" class="block text-sm font-medium">Foto Operator</label>
             <div class="wrapper mt-2">
-                <img src="{{ $operator->image_path ? asset($operator->image_path) : 'https://placehold.co/400x400?text=Image+Not+Found' }}" alt="Foto Operator" class="w-[100px] aspect-square rounded-[4px] object-cover border border-[#0d1117]/[0.12]">
+                <img src="{{ $operator->image_path ? asset('storage/' . $operator->image_path) : 'https://placehold.co/400x400?text=Image+Not+Found' }}" alt="Foto Operator" class="w-[100px] aspect-square rounded-[4px] object-cover border border-[#0d1117]/[0.12]">
             </div>
         </div>
         <div>
@@ -26,15 +26,7 @@
         </div>
         <div class="lg:col-span-2">
             <label for="type" class="block text-sm font-medium">Tipe Operator</label>
-            @if($operator->type === 'academic')
-                <input type="text" id="type" name="type" value="Akademik" class="w-full mt-2 p-3 rounded-black text-[#0d1117] border border-[#0d1117]/[0.12] rounded-[4px]" readonly>
-            @elseif($operator->type === 'student_affair')
-                <input type="text" id="type" name="type" value="Kemahasiswaan" class="w-full mt-2 p-3 rounded-black text-[#0d1117] border border-[#0d1117]/[0.12] rounded-[4px]" readonly>
-            @elseif($operator->type === 'facility')
-                <input type="text" id="type" name="type" value="Fasilitas" class="w-full mt-2 p-3 rounded-black text-[#0d1117] border border-[#0d1117]/[0.12] rounded-[4px]" readonly>
-            @elseif($operator->type === 'harassment')
-                <input type="text" id="type" name="type" value="Pelecehan" class="w-full mt-2 p-3 rounded-black text-[#0d1117] border border-[#0d1117]/[0.12] rounded-[4px]" readonly>
-            @endif
+            <input type="text" id="type" name="type" value="{{ $operator->type }}" class="w-full mt-2 p-3 rounded-black text-[#0d1117] border border-[#0d1117]/[0.12] rounded-[4px]" readonly>
         </div>
         <a href="{{ route('dashboard.operator.index') }}" class="lg:col-span-2 bg-transparent hover:bg-[#0d1117]/[0.04] text-[#0d1117] p-3 rounded-[4px] focus:outline-none text-[0.875rem] border border-[#0d1117]/[0.12] hover:border-[#0d1117]/[0.24] w-fit">
             Kembali ke Halaman Operator

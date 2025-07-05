@@ -11,8 +11,8 @@ class Category extends Model
 
     protected $guarded = ['id'];
 
-    public function reports()
+    public function submissions()
     {
-        return $this->hasMany(Report::class);
+        return $this->hasMany(Submission::class);
     }
 }

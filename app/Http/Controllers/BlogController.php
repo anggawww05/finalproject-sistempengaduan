@@ -6,6 +6,7 @@ use App\Http\Requests\BlogStoreRequest;
 use App\Http\Requests\BlogUpdateRequest;
 use App\Models\Blog;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class BlogController extends Controller
@@ -48,24 +49,26 @@ class BlogController extends Controller
 
     public function store(BlogStoreRequest $request)
     {
-        $imagePath = null;
+        try {
+            $imagePath = null;
+            if ($request->hasFile('image_path')) {
+                $image = $request->file('image_path');
+                $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                $imagePath = $image->storeAs('blog', $imageName, 'public');
+            }
 
-        if ($request->hasFile('image_path')) {
-            $image = $request->file('image_path');
-            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images/blog'), $imageName);
-            $imagePath = 'images/blog/' . $imageName;
+            Blog::create([
+                'image_path' => $imagePath,
+                'user_id' => $request->user_id,
+                'title' => $request->title,
+                'description' => $request->description,
+            ]);
+
+            return redirect(route('dashboard.blog.index'))->with('success', 'Berhasil membuat blog!');
+        } catch (\Exception $e) {
+            logger($e->getMessage());
+            return redirect(route('dashboard.blog.index'))->with('failed', 'Gagal membuat blog!');
         }
-
-        $blog = Blog::create([
-            'image_path' => $imagePath,
-            'user_id' => $request->user_id,
-            'title' => $request->title,
-            'description' => $request->description,
-        ]);
-
-        if ($blog) return redirect(route('dashboard.blog.index'))->with('success', 'Berhasil membuat blog!');
-        return redirect(route('dashboard.blog.index'))->with('failed', 'Gagal membuat blog!');
     }
 
     public function edit(int $id): View
@@ -78,40 +81,48 @@ class BlogController extends Controller
 
     public function update(BlogUpdateRequest $request, int $id)
     {
-        $blog = Blog::with('user')->where('id', $id)->firstOrFail();
-        $imagePath = $blog->image_path;
+        try {
+            $blog = Blog::with('user')->where('id', $id)->firstOrFail();
+            $imagePath = $blog->image_path;
 
-        if ($request->hasFile('image_path')) {
-            if ($blog->image_path && file_exists(public_path($blog->image_path))) {
-                unlink(public_path($blog->image_path));
+            if ($request->hasFile('image_path')) {
+                if ($blog->image_path && Storage::disk('public')->exists($blog->image_path)) {
+                    Storage::disk('public')->delete($blog->image_path);
+                }
+
+                $image = $request->file('image_path');
+                $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                $imagePath = $image->storeAs('blog', $imageName, 'public');
             }
 
-            $image = $request->file('image_path');
-            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images/blog'), $imageName);
-            $imagePath = 'images/blog/' . $imageName;
+            $blog->update([
+                'image_path' => $imagePath,
+                'title' => $request->title,
+                'description' => $request->description,
+            ]);
+
+            return redirect(route('dashboard.blog.index'))->with('success', 'Berhasil mengedit blog!');
+        } catch (\Exception $e) {
+            logger($e->getMessage());
+            return redirect(route('dashboard.blog.index'))->with('failed', 'Gagal mengedit blog!');
         }
-
-        $blog->update([
-            'image_path' => $imagePath,
-            'title' => $request->title,
-            'description' => $request->description,
-        ]);
-
-        if ($blog) return redirect(route('dashboard.blog.index'))->with('success', 'Berhasil mengedit blog!');
-        return redirect(route('dashboard.blog.index'))->with('failed', 'Gagal mengedit blog!');
     }
 
     public function destroy(int $id)
     {
-        $blog = Blog::with('user')->where('id', $id)->firstOrFail();
+        try {
+            $blog = Blog::with('user')->where('id', $id)->firstOrFail();
 
-        if ($blog->image_path && file_exists(public_path($blog->image_path))) {
-            unlink(public_path($blog->image_path));
+            if ($blog->image_path && Storage::disk('public')->exists($blog->image_path)) {
+                Storage::disk('public')->delete($blog->image_path);
+            }
+
+            $blog->delete();
+
+            return redirect(route('dashboard.blog.index'))->with('success', 'Berhasil menghapus blog!');
+        } catch (\Exception $e) {
+            logger($e->getMessage());
+            return redirect(route('dashboard.blog.index'))->with('failed', 'Gagal menghapus blog!');
         }
-
-        $blog->delete();
-
-        return redirect(route('dashboard.blog.index'))->with('success', 'Berhasil menghapus blog!');
     }
 }

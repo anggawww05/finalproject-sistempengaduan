@@ -4,15 +4,14 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\OperatorStoreRequest;
 use App\Http\Requests\OperatorUpdateRequest;
-use App\Models\Admin;
 use App\Models\Operator;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\View\View;
+use Illuminate\Support\Facades\Storage;
 
 class OperatorController extends Controller
 {
-    public function index(Request $request): View
+    public function index(Request $request)
     {
         if ($request->search) {
             $operators = Operator::where('full_name', 'like', "%$request->search%")
@@ -34,7 +33,7 @@ class OperatorController extends Controller
         ]);
     }
 
-    public function show(int $id): View
+    public function show(int $id)
     {
         return view('dashboard.operator.detail', [
             'title' => 'Halaman Detail Operator',
@@ -42,7 +41,7 @@ class OperatorController extends Controller
         ]);
     }
 
-    public function create(): View
+    public function create()
     {
         return view('dashboard.operator.create', [
             'title' => 'Halaman Tambah Operator',
@@ -51,33 +50,35 @@ class OperatorController extends Controller
 
     public function store(OperatorStoreRequest $request)
     {
-        $imagePath = null;
+        try {
+            $imagePath = null;
+            if ($request->hasFile('image_path')) {
+                $image = $request->file('image_path');
+                $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                $imagePath = $image->storeAs('operator', $imageName, 'public');
+            }
 
-        if ($request->hasFile('image_path')) {
-            $image = $request->file('image_path');
-            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images/operator'), $imageName);
-            $imagePath = 'images/operator/' . $imageName;
+            $operator = Operator::create([
+                'image_path' => $imagePath,
+                'full_name' => $request->full_name,
+                'phone_number' => $request->phone_number,
+                'type' => $request->type,
+            ]);
+            User::create([
+                'username' => $request->username,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+                'operator_id' => $operator->id,
+            ]);
+
+            return redirect(route('dashboard.operator.index'))->with('success', 'Berhasil membuat akun operator!');
+        } catch (\Exception $e) {
+            logger($e->getMessage());
+            return redirect(route('dashboard.operator.index'))->with('failed', 'Gagal membuat akun operator!');
         }
-
-        $operator = Operator::create([
-            'image_path' => $imagePath,
-            'full_name' => $request->full_name,
-            'phone_number' => $request->phone_number,
-            'type' => $request->type,
-        ]);
-        $user = User::create([
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'operator_id' => $operator->id,
-        ]);
-
-        if ($user) return redirect(route('dashboard.operator.index'))->with('success', 'Berhasil membuat akun operator!');
-        return redirect(route('dashboard.operator.index'))->with('failed', 'Gagal membuat akun operator!');
     }
 
-    public function edit(int $id): View
+    public function edit(int $id)
     {
         return view('dashboard.operator.edit', [
             'title' => 'Halaman Edit Operator',
@@ -87,54 +88,62 @@ class OperatorController extends Controller
 
     public function update(OperatorUpdateRequest $request, int $id)
     {
-        $operator = Operator::with('user')->where('id', $id)->firstOrFail();
-        $imagePath = $operator->image_path;
+        try {
+            $operator = Operator::with('user')->where('id', $id)->firstOrFail();
+            $imagePath = $operator->image_path;
 
-        if ($request->hasFile('image_path')) {
-            if ($operator->image_path && file_exists(public_path($operator->image_path))) {
-                unlink(public_path($operator->image_path));
+            if ($request->hasFile('image_path')) {
+                if ($operator->image_path && Storage::disk('public')->exists($operator->image_path)) {
+                    Storage::disk('public')->delete($operator->image_path);
+                }
+
+                $image = $request->file('image_path');
+                $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                $imagePath = $image->storeAs('operator', $imageName, 'public');
             }
 
-            $image = $request->file('image_path');
-            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images/operator'), $imageName);
-            $imagePath = 'images/operator/' . $imageName;
-        }
-
-        $operator->update([
-            'image_path' => $imagePath,
-            'full_name' => $request->full_name,
-            'phone_number' => $request->phone_number,
-            'type' => $request->type,
-        ]);
-        if ($request->password) {
-            $operator->user->update([
-                'username' => $request->username,
-                'email' => $request->email,
-                'password' => bcrypt($request->password)
+            $operator->update([
+                'image_path' => $imagePath,
+                'full_name' => $request->full_name,
+                'phone_number' => $request->phone_number,
+                'type' => $request->type,
             ]);
-        } else {
-            $operator->user->update([
-                'username' => $request->username,
-                'email' => $request->email,
-            ]);
-        }
+            if ($request->password) {
+                $operator->user->update([
+                    'username' => $request->username,
+                    'email' => $request->email,
+                    'password' => bcrypt($request->password)
+                ]);
+            } else {
+                $operator->user->update([
+                    'username' => $request->username,
+                    'email' => $request->email,
+                ]);
+            }
 
-        if ($operator) return redirect(route('dashboard.operator.index'))->with('success', 'Berhasil mengedit akun operator!');
-        return redirect(route('dashboard.operator.index'))->with('failed', 'Gagal mengedit akun operator!');
+            return redirect(route('dashboard.operator.index'))->with('success', 'Berhasil mengedit akun operator!');
+        } catch (\Exception $e) {
+            logger($e->getMessage());
+            return redirect(route('dashboard.operator.index'))->with('failed', 'Gagal mengedit akun operator!');
+        }
     }
 
     public function destroy(int $id)
     {
-        $operator = Operator::with('user')->where('id', $id)->firstOrFail();
+        try {
+            $operator = Operator::with('user')->where('id', $id)->firstOrFail();
 
-        if ($operator->image_path && file_exists(public_path($operator->image_path))) {
-            unlink(public_path($operator->image_path));
+            if ($operator->image_path && Storage::disk('public')->exists($operator->image_path)) {
+                Storage::disk('public')->delete($operator->image_path);
+            }
+
+            $operator->user->delete();
+            $operator->delete();
+
+            return redirect(route('dashboard.operator.index'))->with('success', 'Berhasil menghapus akun operator!');
+        } catch (\Exception $e) {
+            logger($e->getMessage());
+            return redirect(route('dashboard.operator.index'))->with('failed', 'Gagal membuat akun operator!');
         }
-
-        $operator->user->delete();
-        $operator->delete();
-
-        return redirect(route('dashboard.operator.index'))->with('success', 'Berhasil menghapus akun operator!');
     }
 }

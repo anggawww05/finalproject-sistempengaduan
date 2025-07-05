@@ -16,7 +16,7 @@ return new class extends Migration
             $table->text('image_path')->nullable();
             $table->string('full_name');
             $table->string('phone_number');
-            $table->enum('type', ['academic', 'student_affair', 'facility', 'harassment']);
+            $table->enum('type', ['Akademik', 'Kemahasiswaan', 'Fasilitas', 'Pelecehan']);
             $table->timestamps();
             $table->softDeletes();
         });

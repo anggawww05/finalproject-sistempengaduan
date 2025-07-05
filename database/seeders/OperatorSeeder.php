@@ -16,25 +16,25 @@ class OperatorSeeder extends Seeder
         Operator::create([
             'full_name' => 'Operator 1',
             'phone_number' => '08123456789',
-            'type' => 'academic',
+            'type' => 'Akademik',
         ]);
 
         Operator::create([
             'full_name' => 'Operator 2',
             'phone_number' => '08123456789',
-            'type' => 'student_affair',
+            'type' => 'Kemahasiswaan',
         ]);
 
         Operator::create([
             'full_name' => 'Operator 3',
             'phone_number' => '08123456789',
-            'type' => 'facility',
+            'type' => 'Fasilitas',
         ]);
 
         Operator::create([
             'full_name' => 'Operator 4',
             'phone_number' => '08123456789',
-            'type' => 'harassment',
+            'type' => 'Pelecehan',
         ]);
     }
 }

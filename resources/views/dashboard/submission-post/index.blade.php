@@ -41,39 +41,40 @@
             </tr>
             </thead>
             <tbody>
-            @if(count($reportPosts) === 0)
+            @if(count($submissionPosts) === 0)
                 <tr class="bg-white border-b border-gray-200 hover:bg-gray-50">
                     <td colspan="7" class="px-6 py-4 text-center">
                         Tidak ada data pengajuan!
                     </td>
                 </tr>
             @else
-                @foreach($reportPosts as $reportPost)
+                @foreach($submissionPosts as $submissionPost)
                     <tr class="bg-white border-b border-gray-200 hover:bg-gray-50">
                         <td class="px-6 py-4">
-                            {{ $reportPost->report->ticket_number }}
+                            {{ $submissionPost->submission->ticket_number }}
                         </td>
                         <td class="px-6 py-4">
-                            {{ $reportPost->report->user->username }}
+                            {{ $submissionPost->submission->user->username }}
                         </td>
                         <td class="px-6 py-4">
-                            {{ $reportPost->report->category->name }}
+                            {{ $submissionPost->submission->category->name }}
                         </td>
                         <td class="px-6 py-4">
-                            {{ $reportPost->title }}
+                            {{ $submissionPost->title }}
                         </td>
                         <td class="px-6 py-4 capitalize">
-                            {{ $reportPost->report->status }}
+                            {{ $submissionPost->submission->status }}
                         </td>
                         <td class="px-6 py-4 capitalize">
-                            {{ $reportPost->report->available }}
+                            {{ $submissionPost->submission->available }}
                         </td>
                         <td class="px-6 py-4 text-right flex items-center gap-[8px]">
-                            <a href="{{ route('dashboard.report-post.show', $reportPost) }}" class="font-medium text-blue-600 hover:underline">Detail</a>
-                            <a href="{{ route('dashboard.report-post.edit', $reportPost) }}" class="font-medium text-yellow-600 hover:underline">Edit</a>
-                            <form action="{{ route('dashboard.report-post.destroy', $reportPost) }}" method="POST">
+                            <a href="{{ route('dashboard.submission-post.show', $submissionPost) }}" class="font-medium text-blue-600 hover:underline">Detail</a>
+                            <a href="{{ route('dashboard.submission-post.edit', $submissionPost) }}" class="font-medium text-yellow-600 hover:underline">Edit</a>
+                            <form action="{{ route('dashboard.submission-post.destroy', $submissionPost) }}" method="POST">
                                 @csrf
-                                <button type="submit" class="font-medium text-red-600 hover:underline" onclick="confirm('Apakah anda yakin ingin menghapus pengajuan posting ini?')">Hapus</button>
+                                @method('DELETE')
+                                <button type="submit" class="font-medium text-red-600 hover:underline" onclick="return confirm('Apakah anda yakin ingin menghapus pengajuan posting ini?')">Hapus</button>
                             </form>
                         </td>
                     </tr>

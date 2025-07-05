@@ -12,39 +12,60 @@
         <div class="lg:col-span-2">
             <label for="image_path" class="block text-sm font-medium">Foto Operator</label>
             <div class="wrapper mt-2 flex items-end gap-[6px]">
-                <img src="https://placehold.co/400x400?text=Image+Not+Found" alt="Foto Operator" class="w-[100px] aspect-square rounded-[4px] object-cover border border-[#0d1117]/[0.12]">
-                <input type="file" name="image_path">
+                <img id="image-preview" src="https://placehold.co/400x400?text=Image+Not+Found" alt="Foto Operator" class="w-[100px] aspect-square rounded-[4px] object-cover border border-[#0d1117]/[0.12]">
+                <input type="file" name="image_path" id="image-input">
             </div>
+            @error('image_path')
+            <p class="message-error text-red-600 mt-1 text-[0.875rem]">{{ $message }}</p>
+            @enderror
         </div>
         <div>
             <label for="username" class="block text-sm font-medium">Username</label>
-            <input type="text" id="username" name="username" class="w-full mt-2 p-3 rounded-black text-[#0d1117] border border-[#0d1117]/[0.12] rounded-[4px]" required>
+            <input type="text" id="username" name="username" placeholder="Masukkan username operator..." class="w-full mt-2 p-3 rounded-black text-[#0d1117] border border-[#0d1117]/[0.12] rounded-[4px]" required>
+            @error('username')
+            <p class="message-error text-red-600 mt-1 text-[0.875rem]">{{ $message }}</p>
+            @enderror
         </div>
         <div>
             <label for="full_name" class="block text-sm font-medium">Nama Lengkap</label>
-            <input type="text" id="full_name" name="full_name" class="w-full mt-2 p-3 rounded-black text-[#0d1117] border border-[#0d1117]/[0.12] rounded-[4px]" required>
+            <input type="text" id="full_name" name="full_name" placeholder="Masukkan nama lengkap operator..." class="w-full mt-2 p-3 rounded-black text-[#0d1117] border border-[#0d1117]/[0.12] rounded-[4px]" required>
+            @error('full_name')
+            <p class="message-error text-red-600 mt-1 text-[0.875rem]">{{ $message }}</p>
+            @enderror
         </div>
         <div>
             <label for="phone_number" class="block text-sm font-medium">Nomor Telepon</label>
-            <input type="text" id="phone_number" name="phone_number" class="w-full mt-2 p-3 rounded-black text-[#0d1117] border border-[#0d1117]/[0.12] rounded-[4px]" required>
+            <input type="text" id="phone_number" name="phone_number" placeholder="Masukkan nomor telepon operator..." class="w-full mt-2 p-3 rounded-black text-[#0d1117] border border-[#0d1117]/[0.12] rounded-[4px]" required>
+            @error('phone_number')
+            <p class="message-error text-red-600 mt-1 text-[0.875rem]">{{ $message }}</p>
+            @enderror
         </div>
         <div>
             <label for="email" class="block text-sm font-medium">Email</label>
-            <input type="email" id="email" name="email" class="w-full mt-2 p-3 rounded-black text-[#0d1117] border border-[#0d1117]/[0.12] rounded-[4px]" required>
+            <input type="email" id="email" name="email" placeholder="Masukkan email operator..." class="w-full mt-2 p-3 rounded-black text-[#0d1117] border border-[#0d1117]/[0.12] rounded-[4px]" required>
+            @error('email')
+            <p class="message-error text-red-600 mt-1 text-[0.875rem]">{{ $message }}</p>
+            @enderror
         </div>
         <div>
             <label for="password" class="block text-sm font-medium">Password</label>
-            <input type="password" id="password" name="password" class="w-full mt-2 p-3 rounded-black text-[#0d1117] border border-[#0d1117]/[0.12] rounded-[4px]" required>
+            <input type="password" id="password" name="password" placeholder="Masukkan password operator..." class="w-full mt-2 p-3 rounded-black text-[#0d1117] border border-[#0d1117]/[0.12] rounded-[4px]" required>
+            @error('password')
+            <p class="message-error text-red-600 mt-1 text-[0.875rem]">{{ $message }}</p>
+            @enderror
         </div>
         <div>
             <label for="type" class="block text-sm font-medium">Tipe Operator</label>
             <select name="type" id="type" required class="w-full mt-2 p-3 rounded-black text-[#0d1117] border border-[#0d1117]/[0.12] rounded-[4px]">
                 <option value="">Pilih tipe operator</option>
-                <option value="academic">Akademik</option>
-                <option value="student_affair">Kemahasiswaan</option>
-                <option value="facility">Fasilitas</option>
-                <option value="harassment">Pelecehan</option>
+                <option value="Akademik">Akademik</option>
+                <option value="Kemahasiswaan">Kemahasiswaan</option>
+                <option value="Fasilitas">Fasilitas</option>
+                <option value="Pelecehan">Pelecehan</option>
             </select>
+            @error('type')
+            <p class="message-error text-red-600 mt-1 text-[0.875rem]">{{ $message }}</p>
+            @enderror
         </div>
         <div class="wrapper lg:col-span-2 flex items-center gap-[6px]">
             <button type="submit" class="cursor-pointer text-nowrap bg-[#A91D3A] hover:bg-[#CA3453] text-white p-3 rounded-[4px] focus:outline-none text-[0.875rem] border w-fit">
@@ -55,4 +76,21 @@
             </a>
         </div>
     </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const input = document.getElementById('image-input');
+            const preview = document.getElementById('image-preview');
+            input.addEventListener('change', function () {
+                const file = this.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function (e) {
+                        preview.src = e.target.result;
+                    }
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+    </script>
 @endsection

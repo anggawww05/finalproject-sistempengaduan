@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Report;
+use App\Models\Submission;
 use Illuminate\Http\Request;
 
 class OperatorAkademikController extends Controller
@@ -14,7 +14,7 @@ class OperatorAkademikController extends Controller
 
     public function indexPermintaan()
     {
-        $reports = Report::where('status', 'pending')->where('category_id', 2)->get();
+        $reports = Submission::where('status', 'pending')->where('category_id', 2)->get();
         return view('operatorakademik.permintaan', compact('reports'));
     }
 

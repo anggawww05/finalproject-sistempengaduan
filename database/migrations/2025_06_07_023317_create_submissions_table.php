@@ -11,12 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('report_posts', function (Blueprint $table) {
+        Schema::create('submissions', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('report_id')->index();
+            $table->bigInteger('user_id')->index();
+            $table->bigInteger('category_id')->index();
             $table->text('image_path');
+            $table->string('ticket_number')->nullable();
             $table->string('title');
             $table->text('description');
+            $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->enum('available', ['public', 'private'])->default('private');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -27,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('report_posts');
+        Schema::dropIfExists('reports');
     }
 };

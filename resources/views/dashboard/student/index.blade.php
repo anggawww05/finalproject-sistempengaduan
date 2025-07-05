@@ -70,7 +70,8 @@
                             <a href="{{ route('dashboard.student.edit', $student) }}" class="font-medium text-yellow-600 hover:underline">Edit</a>
                             <form action="{{ route('dashboard.student.destroy', $student) }}" method="POST">
                                 @csrf
-                                <button type="submit" class="font-medium text-red-600 hover:underline" onclick="confirm('Apakah anda yakin ingin menghapus siswa ini?')">Hapus</button>
+                                @method('DELETE')
+                                <button type="submit" class="font-medium text-red-600 hover:underline" onclick="return confirm('Apakah anda yakin ingin menghapus siswa ini?')">Hapus</button>
                             </form>
                         </td>
                     </tr>

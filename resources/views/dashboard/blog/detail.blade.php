@@ -5,7 +5,7 @@
         <div class="lg:col-span-2">
             <label for="image_path" class="block text-sm font-medium">Foto Blog</label>
             <div class="wrapper mt-2">
-                <img src="{{ $blog->image_path ? asset($blog->image_path) : 'https://placehold.co/400x400?text=Image+Not+Found' }}" alt="Foto Blog" class="w-[100px] aspect-square rounded-[4px] object-cover border border-[#0d1117]/[0.12]">
+                <img src="{{ $blog->image_path ? asset('storage/' . $blog->image_path) : 'https://placehold.co/400x400?text=Image+Not+Found' }}" alt="Foto Blog" class="w-[100px] aspect-square rounded-[4px] object-cover border border-[#0d1117]/[0.12]">
             </div>
         </div>
         <div class="lg:col-span-2">

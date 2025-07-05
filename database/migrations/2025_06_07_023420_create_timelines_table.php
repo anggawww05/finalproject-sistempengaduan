@@ -13,14 +13,13 @@ return new class extends Migration
     {
         Schema::create('timelines', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('report_id')->index();
+            $table->bigInteger('submission_id')->index();
             $table->string('title');
             $table->text('description');
             $table->string('status');
             $table->integer('order')->default(1);
             $table->timestamps();
             $table->softDeletes();
-//            $table->enum('status', ['Pengaduan Diterima', 'Ditugaskan ke Departemen', 'Investigasi ke Lapangan', 'Tindakan Eksekusi', 'Selesai'])->default('Pengaduan Diterima')->nullable();
         });
     }
 

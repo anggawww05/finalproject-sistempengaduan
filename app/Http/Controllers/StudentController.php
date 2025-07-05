@@ -7,6 +7,7 @@ use App\Http\Requests\StudentUpdateRequest;
 use App\Models\Student;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class StudentController extends Controller
@@ -51,31 +52,33 @@ class StudentController extends Controller
 
     public function store(StudentStoreRequest $request)
     {
-        $imagePath = null;
+        try {
+            $imagePath = null;
+            if ($request->hasFile('image_path')) {
+                $image = $request->file('image_path');
+                $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                $imagePath = $image->storeAs('student', $imageName, 'public');
+            }
 
-        if ($request->hasFile('image_path')) {
-            $image = $request->file('image_path');
-            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images/student'), $imageName);
-            $imagePath = 'images/student/' . $imageName;
+            $student = Student::create([
+                'image_path' => $imagePath,
+                'full_name' => $request->full_name,
+                'phone_number' => $request->phone_number,
+                'study_program' => $request->study_program,
+                'nim' => $request->nim,
+            ]);
+            User::create([
+                'username' => $request->username,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+                'student_id' => $student->id,
+            ]);
+
+            return redirect(route('dashboard.student.index'))->with('success', 'Berhasil membuat akun siswa!');
+        } catch (\Exception $e) {
+            logger($e->getMessage());
+            return redirect(route('dashboard.student.index'))->with('failed', 'Gagal membuat akun siswa!');
         }
-
-        $student = Student::create([
-            'image_path' => $imagePath,
-            'full_name' => $request->full_name,
-            'phone_number' => $request->phone_number,
-            'study_program' => $request->study_program,
-            'nim' => $request->nim,
-        ]);
-        $user = User::create([
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'student_id' => $student->id,
-        ]);
-
-        if ($user) return redirect(route('dashboard.student.index'))->with('success', 'Berhasil membuat akun siswa!');
-        return redirect(route('dashboard.student.index'))->with('failed', 'Gagal membuat akun siswa!');
     }
 
     public function edit(int $id): View
@@ -88,55 +91,60 @@ class StudentController extends Controller
 
     public function update(StudentUpdateRequest $request, int $id)
     {
-        $student = Student::with('user')->where('id', $id)->firstOrFail();
-        $imagePath = $student->image_path;
+        try {
+            $student = Student::with('user')->where('id', $id)->firstOrFail();
+            $imagePath = $student->image_path;
 
-        if ($request->hasFile('image_path')) {
-            if ($student->image_path && file_exists(public_path($student->image_path))) {
-                unlink(public_path($student->image_path));
+            if ($request->hasFile('image_path')) {
+                if ($student->image_path && Storage::disk('public')->exists($student->image_path)) {
+                    Storage::disk('public')->delete($student->image_path);
+                }
+
+                $image = $request->file('image_path');
+                $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
+                $imagePath = $image->storeAs('student', $imageName, 'public');
             }
 
-            $image = $request->file('image_path');
-            $imageName = time() . '_' . uniqid() . '.' . $image->getClientOriginalExtension();
-            $image->move(public_path('images/student'), $imageName);
-            $imagePath = 'images/student/' . $imageName;
-        }
-
-        $student->update([
-            'image_path' => $imagePath,
-            'full_name' => $request->full_name,
-            'phone_number' => $request->phone_number,
-            'study_program' => $request->study_program,
-            'nim' => $request->nim,
-        ]);
-        if ($request->password) {
-            $student->user->update([
-                'username' => $request->username,
-                'email' => $request->email,
-                'password' => bcrypt($request->password)
+            $student->update([
+                'image_path' => $imagePath,
+                'full_name' => $request->full_name,
+                'phone_number' => $request->phone_number,
+                'study_program' => $request->study_program,
+                'nim' => $request->nim,
             ]);
-        } else {
             $student->user->update([
                 'username' => $request->username,
                 'email' => $request->email,
             ]);
-        }
+            if ($request->password) {
+                $student->user->update([
+                    'password' => bcrypt($request->password)
+                ]);
+            }
 
-        if ($student) return redirect(route('dashboard.student.index'))->with('success', 'Berhasil mengedit akun siswa!');
-        return redirect(route('dashboard.student.index'))->with('failed', 'Gagal mengedit akun siswa!');
+            return redirect(route('dashboard.student.index'))->with('success', 'Berhasil mengedit akun siswa!');
+        } catch(\Exception $e) {
+            logger($e->getMessage());
+            return redirect(route('dashboard.student.index'))->with('failed', 'Gagal mengedit akun siswa!');
+        }
     }
 
     public function destroy(int $id)
     {
-        $student = Student::with('user')->where('id', $id)->firstOrFail();
+        try {
+            $student = Student::with('user')->where('id', $id)->firstOrFail();
 
-        if ($student->image_path && file_exists(public_path($student->image_path))) {
-            unlink(public_path($student->image_path));
+            if ($student->image_path && Storage::disk('public')->exists($student->image_path)) {
+                Storage::disk('public')->delete($student->image_path);
+            }
+
+            $student->user->delete();
+            $student->delete();
+
+            return redirect(route('dashboard.student.index'))->with('success', 'Berhasil menghapus akun siswa!');
+        } catch (\Exception $e) {
+            logger($e->getMessage());
+            return redirect(route('dashboard.student.index'))->with('failed', 'Gagal menghapus akun siswa!');
         }
-
-        $student->user->delete();
-        $student->delete();
-
-        return redirect(route('dashboard.student.index'))->with('success', 'Berhasil menghapus akun siswa!');
     }
 }

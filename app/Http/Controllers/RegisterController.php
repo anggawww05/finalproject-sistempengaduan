@@ -18,14 +18,18 @@ class RegisterController extends Controller
 
     public function store(RegisterStoreRequest $request)
     {
-        $student = Student::create();
-        $user = User::create([
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => bcrypt($request->password),
-            'student_id' => $student->id,
-        ]);
-        if ($user) return redirect(route('login.index'))->with('success', 'Berhasil mendaftar akun siswa!');
-        return redirect(route('register.index'))->with('failed', 'Gagal mendaftar akun siswa!');
+        try {
+            $student = Student::create();
+            User::create([
+                'username' => $request->username,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+                'student_id' => $student->id,
+            ]);
+            return redirect(route('login.index'))->with('success', 'Berhasil mendaftar akun siswa!');
+        } catch (\Exception $e) {
+            logger($e->getMessage());
+            return redirect(route('register.index'))->with('failed', 'Gagal mendaftar akun siswa!');
+        }
     }
 }

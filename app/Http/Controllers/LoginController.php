@@ -18,21 +18,31 @@ class LoginController extends Controller
 
     public function store(LoginStoreRequest $request)
     {
-        if (Auth::attempt($request->validated())) {
-            $request->session()->regenerate();
-            if (auth()->user()->student_id) {
-                return redirect(route('main.index'));
+        try {
+            if (Auth::attempt($request->validated())) {
+                $request->session()->regenerate();
+                if (auth()->user()->student_id) {
+                    return redirect(route('main.index'));
+                }
+                return redirect(route('dashboard.index'));
             }
-            return redirect(route('dashboard.index'));
+            return redirect(route('login.index'))->with('failed', 'Email atau Password tidak ditemukan!');
+        } catch (\Exception $e) {
+            logger($e->getMessage());
+            return redirect(route('login.index'))->with('failed', 'Gagal melakukan login!');
         }
-        return redirect(route('login.index'))->with('failed', 'Email atau Password tidak ditemukan!');
     }
 
     public function logout(Request $request)
     {
-        Auth::logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        return redirect()->route('login.index')->with('success', 'Berhasil logout akun!');
+        try {
+            Auth::logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            return redirect()->route('login.index')->with('success', 'Berhasil melakukan logout!');
+        } catch (\Exception $e) {
+            logger($e->getMessage());
+            return redirect()->route('login.index')->with('success', 'Gagal melakukan logout!');
+        }
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Mail;
 
-use App\Models\Report;
+use App\Models\Submission;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
@@ -13,7 +13,7 @@ class ReportSubmitted extends Mailable
 
     public $report;
 
-    public function __construct(Report $report)
+    public function __construct(Submission $report)
     {
         $this->report = $report;
     }

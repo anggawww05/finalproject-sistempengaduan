@@ -58,7 +58,8 @@
                             <a href="{{ route('dashboard.blog.edit', $blog) }}" class="font-medium text-yellow-600 hover:underline">Edit</a>
                             <form action="{{ route('dashboard.blog.destroy', $blog) }}" method="POST">
                                 @csrf
-                                <button type="submit" class="font-medium text-red-600 hover:underline" onclick="confirm('Apakah anda yakin ingin menghapus blog ini?')">Hapus</button>
+                                @method('DELETE')
+                                <button type="submit" class="font-medium text-red-600 hover:underline" onclick="return confirm('Apakah anda yakin ingin menghapus blog ini?')">Hapus</button>
                             </form>
                         </td>
                     </tr>

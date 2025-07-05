@@ -18,22 +18,22 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        const reportCategory = @json($report_category);
-        const reportYear = @json($report_year);
-        const reportMonth = @json($report_month);
+        const submissionCategory = @json($submission_category);
+        const submissionYear = @json($submission_year);
+        const submissionMonth = @json($submission_month);
 
         const ctxCategory = document.getElementById('chartReportCategory');
         const ctxYear = document.getElementById('chartReportYear');
         const ctxMonth = document.getElementById('chartReportMonth');
 
-        const labelsCategory = Object.keys(reportCategory);
-        const dataCategory = Object.values(reportCategory);
+        const labelsCategory = Object.keys(submissionCategory);
+        const dataCategory = Object.values(submissionCategory);
 
-        const labelsYear = Object.keys(reportYear);
-        const dataYear = Object.values(reportYear);
+        const labelsYear = Object.keys(submissionYear);
+        const dataYear = Object.values(submissionYear);
 
-        const labelsMonth = Object.keys(reportMonth);
-        const dataMonth = Object.values(reportMonth);
+        const labelsMonth = Object.keys(submissionMonth);
+        const dataMonth = Object.values(submissionMonth);
 
         new Chart(ctxCategory, {
             type: 'bar',
