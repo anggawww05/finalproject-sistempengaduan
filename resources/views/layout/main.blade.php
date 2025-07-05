@@ -12,7 +12,7 @@
     {{-- END STYLE CSS --}}
 </head>
 <body>
-@include('components.old.navbar')
+@include('components.navbar')
 <main class="homepage">
     @yield('content')
 </main>

@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('ticket_number')->nullable();
             $table->string('title');
             $table->text('description');
+            $table->text('survey')->nullable();
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->enum('available', ['public', 'private'])->default('private');
             $table->timestamps();

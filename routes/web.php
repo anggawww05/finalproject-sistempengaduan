@@ -1,12 +1,5 @@
 <?php
 
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\RegisterController;
-use App\Http\Controllers\LoginController;
-use App\Http\Controllers\OperatorAkademikController;
-use App\Http\Controllers\PageController;
-use App\Http\Controllers\SubmissionController;
-use App\Http\Controllers\TimelineController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('guest')->group(function () {
@@ -21,21 +14,24 @@ Route::middleware('guest')->group(function () {
     });
 });
 
-Route::middleware(['auth', 'role:admin,operator'])->group(function () {
+Route::middleware(['auth'])->group(function () {
     Route::controller(\App\Http\Controllers\LoginController::class)->group(function () {
         Route::post('/logout', 'logout')->name('logout');
     });
+});
 
-    Route::controller(\App\Http\Controllers\DashboardController::class)->group(function () {
+Route::middleware(['auth', 'role:admin,operator'])->group(function () {
+
+    Route::controller(\App\Http\Controllers\Dashboard\DashboardController::class)->group(function () {
         Route::get('/dashboard', 'index')->name('dashboard.index');
     });
 
-    Route::controller(\App\Http\Controllers\AdminController::class)->group(function () {
+    Route::controller(\App\Http\Controllers\Dashboard\AdminController::class)->group(function () {
         Route::get('/dashboard/admin', 'index')->name('dashboard.admin.index');
         Route::get('/dashboard/admin/{id}', 'show')->name('dashboard.admin.show');
     });
 
-    Route::controller(\App\Http\Controllers\OperatorController::class)->group(function () {
+    Route::controller(\App\Http\Controllers\Dashboard\OperatorController::class)->group(function () {
         Route::get('/dashboard/operator', 'index')->name('dashboard.operator.index');
         Route::get('/dashboard/operator/create', 'create')->name('dashboard.operator.create');
         Route::get('/dashboard/operator/{id}', 'show')->name('dashboard.operator.show');
@@ -46,7 +42,7 @@ Route::middleware(['auth', 'role:admin,operator'])->group(function () {
         Route::delete('/dashboard/operator/{id}/delete', 'destroy')->name('dashboard.operator.destroy');
     });
 
-    Route::controller(\App\Http\Controllers\StudentController::class)->group(function () {
+    Route::controller(\App\Http\Controllers\Dashboard\StudentController::class)->group(function () {
         Route::get('/dashboard/student', 'index')->name('dashboard.student.index');
         Route::get('/dashboard/student/create', 'create')->name('dashboard.student.create');
         Route::get('/dashboard/student/{id}', 'show')->name('dashboard.student.show');
@@ -57,7 +53,7 @@ Route::middleware(['auth', 'role:admin,operator'])->group(function () {
         Route::delete('/dashboard/student/{id}/delete', 'destroy')->name('dashboard.student.destroy');
     });
 
-    Route::controller(\App\Http\Controllers\BlogController::class)->group(function () {
+    Route::controller(\App\Http\Controllers\Dashboard\BlogController::class)->group(function () {
         Route::get('/dashboard/blog', 'index')->name('dashboard.blog.index');
         Route::get('/dashboard/blog/create', 'create')->name('dashboard.blog.create');
         Route::get('/dashboard/blog/{id}', 'show')->name('dashboard.blog.show');
@@ -68,7 +64,7 @@ Route::middleware(['auth', 'role:admin,operator'])->group(function () {
         Route::delete('/dashboard/blog/{id}/delete', 'destroy')->name('dashboard.blog.destroy');
     });
 
-    Route::controller(\App\Http\Controllers\SubmissionController::class)->group(function () {
+    Route::controller(\App\Http\Controllers\Dashboard\SubmissionController::class)->group(function () {
         Route::get('/dashboard/submission', 'index')->name('dashboard.submission.index');
         Route::get('/dashboard/submission/create', 'create')->name('dashboard.submission.create');
         Route::get('/dashboard/submission/{id}', 'show')->name('dashboard.submission.show');
@@ -81,7 +77,7 @@ Route::middleware(['auth', 'role:admin,operator'])->group(function () {
         Route::post('/dashboard/submission/{id}/confirm', 'confirm')->name('dashboard.submission.confirm');
     });
 
-    Route::controller(\App\Http\Controllers\SubmissionPostController::class)->group(function () {
+    Route::controller(\App\Http\Controllers\Dashboard\SubmissionPostController::class)->group(function () {
         Route::get('/dashboard/submission-post', 'index')->name('dashboard.submission-post.index');
         Route::get('/dashboard/submission-post/{id}', 'show')->name('dashboard.submission-post.show');
         Route::get('/dashboard/submission-post/{id}/edit', 'edit')->name('dashboard.submission-post.edit');
@@ -90,7 +86,7 @@ Route::middleware(['auth', 'role:admin,operator'])->group(function () {
         Route::delete('/dashboard/submission-post/{id}/delete', 'destroy')->name('dashboard.submission-post.destroy');
     });
 
-    Route::controller(\App\Http\Controllers\TimelineController::class)->group(function () {
+    Route::controller(\App\Http\Controllers\Dashboard\TimelineController::class)->group(function () {
         Route::get('/dashboard/submission/{submission}/timeline/create', 'create')->name('dashboard.timeline.create');
         Route::get('/dashboard/submission/{submission}/timeline/{timeline}', 'show')->name('dashboard.timeline.show');
         Route::get('/dashboard/submission/{submission}/timeline/{timeline}/edit', 'edit')->name('dashboard.timeline.edit');
@@ -102,37 +98,60 @@ Route::middleware(['auth', 'role:admin,operator'])->group(function () {
 });
 
 Route::middleware(['auth', 'role:student'])->group(function () {
-    Route::controller(\App\Http\Controllers\MainController::class)->group(function () {
+    Route::controller(\App\Http\Controllers\Homepage\MainController::class)->group(function () {
         Route::get('/', 'index')->name('main.index');
     });
+
+    Route::controller(\App\Http\Controllers\Homepage\BlogController::class)->group(function () {
+        Route::get('/blog', 'index')->name('blog.index');
+        Route::get('/blog/{id}', 'show')->name('blog.show');
+    });
+
+    Route::controller(\App\Http\Controllers\Homepage\SubmissionController::class)->group(function () {
+        Route::get('/submission', 'index')->name('submission.index');
+        Route::get('/submission/{id}', 'show')->name('submission.show');
+        Route::get('/submission/create', 'create')->name('submission.create');
+
+        Route::post('/submission/create', 'store')->name('submission.store');
+    });
+
+    Route::controller(\App\Http\Controllers\Homepage\TrackController::class)->group(function () {
+        Route::get('/track', 'index')->name('track.index');
+        Route::get('/track/{id}', 'show')->name('track.show');
+    });
+
+    Route::controller(\App\Http\Controllers\Homepage\ProfileController::class)->group(function () {
+        Route::get('/profile', 'index')->name('profile.index');
+        Route::get('/profile/edit', 'edit')->name('profile.edit');
+
+        Route::match(['put', 'patch'], '/profile/edit', 'update')->name('profile.update');
+    });
+
+    Route::controller(\App\Http\Controllers\Homepage\ProfileLikeController::class)->group(function () {
+        Route::get('/profile/like', 'index')->name('profile-like.index');
+    });
+
+    Route::controller(\App\Http\Controllers\Homepage\ProfileSubmissionController::class)->group(function () {
+        Route::get('/profile/submission', 'index')->name('profile-submission.index');
+        Route::get('/profile/submission/create', 'create')->name('profile-submission.create');
+        Route::get('/profile/submission/{id}', 'show')->name('profile-submission.show');
+        Route::get('/profile/submission/{id}/edit', 'edit')->name('profile-submission.edit');
+
+        Route::post('/profile/submission', 'store')->name('profile-submission.store');
+        Route::match(['put', 'patch'], '/profile/submission/{id}/edit', 'update')->name('profile-submission.update');
+        Route::delete('/profile/submission/{id}/delete', 'destroy')->name('profile-submission.destroy');
+    });
+
+    Route::controller(\App\Http\Controllers\Homepage\ProfileSubmissionController::class)->group(function () {
+        Route::get('/profile/submission', 'index')->name('profile-submission.index');
+        Route::get('/profile/submission/{id}', 'show')->name('profile-submission.show');
+    });
+
+    Route::controller(\App\Http\Controllers\Homepage\LikeController::class)->group(function () {
+        Route::post('/like', 'store')->name('like.store');
+    });
+
+    Route::controller(\App\Http\Controllers\Homepage\CommentController::class)->group(function () {
+        Route::post('/comment', 'store')->name('comment.store');
+    });
 });
-
-
-Route::get('/beranda', [PageController::class, 'viewLanding'])->name('landing.page');
-Route::get('/pengaduan', [PageController::class, 'viewPengaduan'])->name('pengaduan.page');
-Route::get('/pengaduan/detail-pengaduan', [PageController::class, 'viewDetailPengaduan'])->name('detail.pengaduan.page');
-Route::get('/pengaduan/formulir-akademik', [SubmissionController::class, 'viewForm'])->name('formulir.akademik.page');
-Route::post('/pengaduan/formulir-akademik', [SubmissionController::class, 'store'])->name('formulir.akademik.store');
-// Route::get('/pengaduan/formulir-akademik/menunggu-verifikasi', [PageController::class, 'viewPostSubmit'])->name('formulir.akademik.postsubmit.page');
-Route::get('/berita', [PageController::class, 'viewNews'])->name('news.page');
-Route::get('/timeline', [TimelineController::class, 'indexTimeline'])->name('timeline.page');
-Route::get('/timeline/detail', [TimelineController::class, 'indexDetailTimeline'])->name('timeline.detail.page');
-
-
-//operator akademik
-Route::get('/operator-akademik/dashboard', [OperatorAkademikController::class, 'indexDashboard'])->name('operatorakademik.dashboard');
-Route::get('/operator-akademik/permintaan', [OperatorAkademikController::class, 'indexPermintaan'])->name('operatorakademik.permintaan');
-Route::get('/operator-akademik/list-pengaduan', [OperatorAkademikController::class, 'indexListPengaduan'])->name('operatorakademik.listpengaduan');
-Route::get('/operator-akademik/list-pengaduan/detail-pengaduan', [OperatorAkademikController::class, 'indexDetailPengaduan'])->name('operatorakademik.detailpengaduan');
-
-
-//admin
-Route::get('/admin/dashboard', [AdminController::class, 'indexDashboard'])->name('admin.dashboard');
-Route::get('/admin/kelola-pengguna', [AdminController::class, 'indexPengguna'])->name('admin.kelola.pengguna');
-Route::get('/admin/kelola-pengguna/detail', [AdminController::class, 'indexDetailPengguna'])->name('admin.kelola.pengguna.detail');
-Route::get('/admin/kelola-berita', [AdminController::class, 'indexBerita'])->name('admin.kelola.berita');
-Route::get('/admin/kelola-berita/detail', [AdminController::class, 'indexDetailBerita'])->name('admin.kelola.berita.detail');
-Route::get('/admin/kelola-pengaduan', [AdminController::class, 'indexPengaduan'])->name('admin.kelola.pengaduan');
-Route::get('/admin/kelola-pengaduan/detail', [AdminController::class, 'indexDetailPengaduan'])->name('admin.kelola.pengaduan.detail');
-Route::get('/admin/kelola-laporan', [AdminController::class, 'indexLaporan'])->name('admin.kelola.laporan');
-Route::get('/admin/kelola-laporan/detail', [AdminController::class, 'indexDetailLaporan'])->name('admin.kelola.laporan.detail');
