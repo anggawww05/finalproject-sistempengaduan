@@ -16,7 +16,7 @@
 <main class="homepage">
     @yield('content')
 </main>
-@include('components.old.footer')
+@include('components.footer')
 
 {{-- SCRIPT JS --}}
 <script src="https://kit.fontawesome.com/e5ccf98c71.js" crossorigin="anonymous"></script>

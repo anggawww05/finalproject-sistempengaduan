@@ -21,9 +21,15 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::middleware(['auth', 'role:admin,operator'])->group(function () {
-
     Route::controller(\App\Http\Controllers\Dashboard\DashboardController::class)->group(function () {
         Route::get('/dashboard', 'index')->name('dashboard.index');
+    });
+
+    Route::controller(\App\Http\Controllers\Dashboard\ProfileController::class)->group(function () {
+        Route::get('/dashboard/profile', 'show')->name('dashboard.profile.show');
+        Route::get('/dashboard/profile/edit', 'edit')->name('dashboard.profile.edit');
+
+        Route::match(['put', 'patch'], '/dashboard/profile/edit', 'update')->name('dashboard.profile.update');
     });
 
     Route::controller(\App\Http\Controllers\Dashboard\AdminController::class)->group(function () {
