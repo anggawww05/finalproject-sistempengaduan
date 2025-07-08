@@ -43,6 +43,10 @@
             <label for="description" class="block text-sm font-medium">Konten</label>
             <textarea id="description" name="description" class="w-full mt-2 p-3 rounded-black text-[#0d1117] border border-[#0d1117]/[0.12] rounded-[4px]" readonly rows="6">{{ $submission->description }}</textarea>
         </div>
+        <div class="lg:col-span-2">
+            <label for="description" class="block text-sm font-medium">Survey</label>
+            <textarea id="description" name="description" class="w-full mt-2 p-3 rounded-black text-[#0d1117] border border-[#0d1117]/[0.12] rounded-[4px]" readonly rows="6">{{ $submission->survey ? $submission->survey : 'Survey belum ditambah' }}</textarea>
+        </div>
         <a href="{{ route('dashboard.submission.index') }}" class="lg:col-span-2 bg-transparent hover:bg-[#0d1117]/[0.04] text-[#0d1117] p-3 rounded-[4px] focus:outline-none text-[0.875rem] border border-[#0d1117]/[0.12] hover:border-[#0d1117]/[0.24] w-fit">
             Kembali ke Halaman Pengajuan
         </a>

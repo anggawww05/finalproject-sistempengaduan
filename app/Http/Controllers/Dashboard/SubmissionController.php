@@ -262,7 +262,9 @@ class SubmissionController extends Controller
         $data = [
             'full_name' => $submission->user->student->full_name,
             'email' => $submission->user->email,
-            'message' => 'Pengajuan kamu telah '. $status .' oleh admin'
+            'message' => 'Pengajuan kamu telah '. $status .' oleh operator.',
+            'ticket_number' => $submission->ticket_number,
+
         ];
 
         Mail::to($submission->user->email)->send(new SendEmail($data));

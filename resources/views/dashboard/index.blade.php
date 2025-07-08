@@ -1,18 +1,58 @@
 @extends('layout.dashboard')
 
 @section('content')
-    <div class="wrapper w-full grid grid-cols-2 gap-[20px]">
-        <div class="wrapper w-full p-4 border border-[#0d1117]/[0.12] rounded-[4px]">
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+        <div class="flex flex-col items-start p-4 bg-blue-500/10 border border-blue-400 rounded-lg shadow-sm">
+            <span class="text-xs text-blue-700 mb-1">Total Mahasiswa</span>
+            <span class="text-2xl font-bold text-blue-900">{{ $total_student }}</span>
+        </div>
+        <div class="flex flex-col items-start p-4 bg-green-500/10 border border-green-400 rounded-lg shadow-sm">
+            <span class="text-xs text-green-700 mb-1">Total Operator</span>
+            <span class="text-2xl font-bold text-green-900">{{ $total_admin }}</span>
+        </div>
+        <div class="flex flex-col items-start p-4 bg-yellow-400/10 border border-yellow-400 rounded-lg shadow-sm">
+            <span class="text-xs text-yellow-700 mb-1">Total Admin</span>
+            <span class="text-2xl font-bold text-yellow-900">{{ $total_operator }}</span>
+        </div>
+        <div class="flex flex-col items-start p-4 bg-pink-500/10 border border-pink-400 rounded-lg shadow-sm">
+            <span class="text-xs text-pink-700 mb-1">Total Pengaduan</span>
+            <span class="text-2xl font-bold text-pink-900">{{ $total_submission }}</span>
+        </div>
+        <div class="flex flex-col items-start p-4 bg-emerald-500/10 border border-emerald-400 rounded-lg shadow-sm">
+            <span class="text-xs text-emerald-700 mb-1">Total Pengaduan Diterima</span>
+            <span class="text-2xl font-bold text-emerald-900">{{ $total_submission_approved }}</span>
+        </div>
+        <div class="flex flex-col items-start p-4 bg-red-500/10 border border-red-400 rounded-lg shadow-sm">
+            <span class="text-xs text-red-700 mb-1">Total Pengaduan Ditolak</span>
+            <span class="text-2xl font-bold text-red-900">{{ $total_submission_rejected }}</span>
+        </div>
+    </div>
+
+
+    <div class="wrapper w-full grid grid-cols-2 grid-rows-2 gap-6">
+        <div class="w-full h-80 p-4 border border-[#0d1117]/[0.12] rounded-[4px] flex flex-col">
+            <h2 class="text-[1.5rem] font-semibold text-[#0d1117] mb-[12px]">Grafik Pertambahan User Per Bulan</h2>
+            <div class="flex-1 flex items-center">
+                <canvas id="chartUserPerMonth" class="w-full h-full"></canvas>
+            </div>
+        </div>
+        <div class="w-full h-80 p-4 border border-[#0d1117]/[0.12] rounded-[4px] flex flex-col">
             <h2 class="text-[1.5rem] font-semibold text-[#0d1117] mb-[12px]">Grafik Pengajuan Berdasarkan Kategori</h2>
-            <canvas id="chartReportCategory"></canvas>
+            <div class="flex-1 flex items-center">
+                <canvas id="chartReportCategory" class="w-full h-full"></canvas>
+            </div>
         </div>
-        <div class="wrapper w-full p-4 border border-[#0d1117]/[0.12] rounded-[4px]">
+        <div class="w-full h-80 p-4 border border-[#0d1117]/[0.12] rounded-[4px] flex flex-col">
             <h2 class="text-[1.5rem] font-semibold text-[#0d1117] mb-[12px]">Grafik Pengajuan Tahunan</h2>
-            <canvas id="chartReportYear"></canvas>
+            <div class="flex-1 flex items-center">
+                <canvas id="chartReportYear" class="w-full h-full"></canvas>
+            </div>
         </div>
-        <div class="wrapper w-full p-4 border border-[#0d1117]/[0.12] rounded-[4px]">
+        <div class="w-full h-80 p-4 border border-[#0d1117]/[0.12] rounded-[4px] flex flex-col">
             <h2 class="text-[1.5rem] font-semibold text-[#0d1117] mb-[12px]">Grafik Pengajuan Bulan Ini</h2>
-            <canvas id="chartReportMonth"></canvas>
+            <div class="flex-1 flex items-center">
+                <canvas id="chartReportMonth" class="w-full h-full"></canvas>
+            </div>
         </div>
     </div>
 
@@ -87,6 +127,38 @@
                 }]
             },
             options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+    <script>
+        const userPerMonth = @json($user_per_month);
+
+        const labelsUserMonth = Object.keys(userPerMonth);
+        const dataUserMonth = Object.values(userPerMonth);
+
+        const ctxUserMonth = document.getElementById('chartUserPerMonth');
+
+        new Chart(ctxUserMonth, {
+            type: 'line',
+            data: {
+                labels: labelsUserMonth,
+                datasets: [{
+                    label: 'User Baru per Bulan',
+                    data: dataUserMonth,
+                    borderWidth: 2,
+                    borderColor: '#6366F1',
+                    backgroundColor: 'rgba(99,102,241,0.1)',
+                    fill: true,
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
                 scales: {
                     y: {
                         beginAtZero: true

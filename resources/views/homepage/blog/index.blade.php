@@ -1,7 +1,7 @@
 @extends('layout.main')
 
 @section('content')
-    <div class="w-screen h-full bg-[#F5F5F5] p-30">
+    <div class="w-screen h-screen p-30">
         <h1 class="text-[20px] font-semibold text-center mb-8">Seluruh Blog</h1>
         <div class="mb-8 flex justify-center">
             <form method="GET" class="flex items-center">

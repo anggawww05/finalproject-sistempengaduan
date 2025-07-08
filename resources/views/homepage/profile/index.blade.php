@@ -26,19 +26,19 @@
                     </div>
                 </div>
                 <a href="{{ route('profile.edit') }}"
-                    class="bg-[#003A5B] h-[35px] w-[100px] text-[15px] text-white px-4 py-2 rounded hover:bg-[#004A73] transition">Edit
+                    class="bg-[#A91D3A] h-[35px] w-[100px] text-[15px] text-white px-4 py-2 rounded hover:bg-[#CA3453] transition">Edit
                     Profil</a>
             </div>
             <div class="flex flex-col items-center gap-2 mt-4 " data-aos="fade-up">
                 <a href="{{ route('profile-submission.index') }}">
                     <div
-                        class="w-[600px] h-[40px] bg-white outline outline-[#AAAAAA] rounded-lg p-2 hover:bg-[#003654] hover:text-white transition">
+                        class="w-[600px] h-[40px] bg-white outline outline-[#AAAAAA] rounded-lg p-2 hover:bg-gray-200 transition">
                         <h1>Pengaduan Saya</h1>
                     </div>
                 </a>
                 <a href="{{ route('profile-like.index') }}">
                     <div
-                        class="w-[600px] h-[40px] bg-white outline outline-[#AAAAAA] rounded-lg p-2 hover:bg-[#003654] hover:text-white transition">
+                        class="w-[600px] h-[40px] bg-white outline outline-[#AAAAAA] rounded-lg p-2 hover:bg-gray-200 transition">
                         <h1>Daftar Postingan Disukai</h1>
                     </div>
                 </a>

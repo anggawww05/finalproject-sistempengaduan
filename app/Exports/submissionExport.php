@@ -41,13 +41,14 @@ class submissionExport implements FromCollection, WithHeadings, WithColumnWidths
                 $submission->description,
                 $submission->status,
                 $submission->available,
+                $submission->survey ?? '-',
             ];
         });
     }
 
     public function headings(): array
     {
-        return ["Pembuat", "Kategori", "Tiket", "Judul", "Deskripsi", "Status", "Status Publish"];
+        return ["Pembuat", "Kategori", "Tiket", "Judul", "Deskripsi", "Status", "Status Publish", "Survey"];
     }
 
     public function columnWidths(): array
@@ -60,6 +61,7 @@ class submissionExport implements FromCollection, WithHeadings, WithColumnWidths
             'E' => 20,
             'F' => 20,
             'G' => 20,
+            'H' => 20,
         ];
     }
 

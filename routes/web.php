@@ -101,6 +101,7 @@ Route::middleware(['auth', 'role:admin,operator'])->group(function () {
         Route::match(['put', 'patch'], '/dashboard/submission/{submission}/timeline/{timeline}/edit', 'update')->name('dashboard.timeline.update');
         Route::delete('/dashboard/submission/{submission}/timeline/{timeline}/delete', 'destroy')->name('dashboard.timeline.destroy');
     });
+
 });
 
 Route::middleware(['auth', 'role:student'])->group(function () {

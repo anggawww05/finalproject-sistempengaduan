@@ -1,7 +1,7 @@
 @extends('layout.main')
 
 @section('content')
-    <div class="w-screen h-full bg-[#F5F5F5] p-30">
+    <div class="w-screen h-full p-30">
         <h1 class="text-[20px] font-semibold text-center mb-8">Daftar Pengajuan</h1>
         <div class="mb-8 flex justify-center">
             <form method="GET" class="flex items-center">
@@ -72,6 +72,7 @@
                     </div>
                 </form>
             </div>
+
             <div class="w-full grid grid-cols-3 gap-4">
                 @if(count($submissionPosts) === 0)
                     <p class="col-span-4 w-full text-center text-[0.913rem] text-[#0d1117]/[0.42] mt-8">Data pengajuan postingan tidak ada.</p>

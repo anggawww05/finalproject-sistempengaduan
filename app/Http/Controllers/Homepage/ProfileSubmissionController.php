@@ -92,7 +92,7 @@ class ProfileSubmissionController extends Controller
     public function edit(int $id)
     {
         return view('homepage.profile-submission.edit', [
-            'title' => 'Halaman Edit Pengajuan',
+            'title' => 'Halaman Survey Pengajuan',
             'submission' => Submission::where('id', $id)->first(),
         ]);
     }
