@@ -22,17 +22,31 @@ class SubmissionController extends Controller
     public function index(Request $request)
     {
         if (auth()->user()->operator_id) {
-            if ($request->search) {
+            if ($request->search || $request->start_date || $request->end_date) {
                 $submissions = Submission::with(['user', 'category', 'submission_post'])
                     ->whereHas('category', function ($query) {
                         $query->where('name', auth()->user()->operator->type);
                     })
                     ->where(function ($query) use ($request) {
-                        $query->where('ticket_number', 'like', "%$request->search%")
-                            ->orWhere('title', 'like', "%$request->search%")
-                            ->orWhere('description', 'like', "%$request->search%")
-                            ->orWhere('status', 'like', "%$request->search%")
-                            ->orWhere('available', 'like', "%$request->search%");
+                        if ($request->search) {
+                            $query->where(function ($q) use ($request) {
+                                $q->where('ticket_number', 'like', "%{$request->search}%")
+                                    ->orWhere('title', 'like', "%{$request->search}%")
+                                    ->orWhere('description', 'like', "%{$request->search}%")
+                                    ->orWhere('status', 'like', "%{$request->search}%")
+                                    ->orWhere('available', 'like', "%{$request->search}%");
+                            });
+                        }
+                        if ($request->start_date && $request->end_date) {
+                            $query->whereBetween('created_at', [
+                                $request->start_date . ' 00:00:00',
+                                $request->end_date . ' 23:59:59'
+                            ]);
+                        } elseif ($request->start_date) {
+                            $query->whereDate('created_at', '>=', $request->start_date);
+                        } elseif ($request->end_date) {
+                            $query->whereDate('created_at', '<=', $request->end_date);
+                        }
                     })
                     ->latest()
                     ->get();
@@ -45,18 +59,28 @@ class SubmissionController extends Controller
                     ->get();
             }
         } else {
-            if ($request->search) {
+            if ($request->search || $request->start_date || $request->end_date) {
                 $submissions = Submission::with(['user', 'category', 'submission_post'])
-                    ->where('ticket_number', 'like', "%$request->search%")
-                    ->orWhere('title', 'like', "%$request->search%")
-                    ->orWhere('description', 'like', "%$request->search%")
-                    ->orWhere('status', 'like', "%$request->search%")
-                    ->orWhere('available', 'like', "%$request->search%")
-                    ->orWhereHas('user', function ($query) use ($request) {
-                        $query->where('username', 'like', "%$request->search%")
-                            ->where('email', 'like', "%$request->search%");
-                    })->orWhereHas('category', function ($query) use ($request) {
-                        $query->where('name', 'like', "%$request->search%");
+                    ->where(function ($query) use ($request) {
+                        if ($request->search) {
+                            $query->where(function ($q) use ($request) {
+                                $q->where('ticket_number', 'like', "%{$request->search}%")
+                                    ->orWhere('title', 'like', "%{$request->search}%")
+                                    ->orWhere('description', 'like', "%{$request->search}%")
+                                    ->orWhere('status', 'like', "%{$request->search}%")
+                                    ->orWhere('available', 'like', "%{$request->search}%");
+                            });
+                        }
+                        if ($request->start_date && $request->end_date) {
+                            $query->whereBetween('created_at', [
+                                $request->start_date . ' 00:00:00',
+                                $request->end_date . ' 23:59:59'
+                            ]);
+                        } elseif ($request->start_date) {
+                            $query->whereDate('created_at', '>=', $request->start_date);
+                        } elseif ($request->end_date) {
+                            $query->whereDate('created_at', '<=', $request->end_date);
+                        }
                     })
                     ->latest()
                     ->get();
@@ -64,10 +88,13 @@ class SubmissionController extends Controller
                 $submissions = Submission::with(['user', 'category', 'submission_post'])->latest()->get();
             }
         }
+
         return view('dashboard.submission.index', [
             'title' => 'Halaman Pengajuan',
             'submissions' => $submissions,
             'search' => $request->search,
+            'startDate' => $request->start_date,
+            'endDate' => $request->end_date,
         ]);
     }
 

@@ -14,10 +14,15 @@
     @endif
     <form method="GET" class="mb-4 flex items-center gap-[8px]">
         <input type="text" id="search" name="search" value="{{ $search }}" placeholder="Cari pengajuan..." class="w-full p-3 rounded-black text-[#0d1117] border border-[#0d1117]/[0.12] rounded-[4px]">
+        <input type="date" id="start_date" name="start_date" value="{{ $startDate }}" placeholder="Cari dari tanggal..." class="w-full p-3 rounded-black text-[#0d1117] border border-[#0d1117]/[0.12] rounded-[4px]">
+        <input type="date" id="end_date" name="end_date" value="{{ $endDate }}" placeholder="Cari sampai tanggal..." class="w-full p-3 rounded-black text-[#0d1117] border border-[#0d1117]/[0.12] rounded-[4px]">
+        <button type="submit" class="text-nowrap bg-[#A91D3A] hover:bg-[#CA3453] text-white py-3 px-6 rounded-[4px] focus:outline-none text-[0.875rem] border w-fit">
+            Cari
+        </button>
         <a href="{{ route('dashboard.submission.create') }}" class="text-nowrap bg-[#A91D3A] hover:bg-[#CA3453] text-white p-3 rounded-[4px] focus:outline-none text-[0.875rem] border w-fit">
             Tambah Pengajuan
         </a>
-        <a target="_blank" href="{{ route('dashboard.submission.export-excel') }}" class="lg:col-span-2 text-nowrap bg-transparent hover:bg-[#0d1117]/[0.04] text-[#0d1117] p-3 rounded-[4px] focus:outline-none text-[0.875rem] border border-[#0d1117]/[0.12] hover:border-[#0d1117]/[0.24] w-fit">
+        <a target="_blank" href="{{ route('dashboard.submission.export-excel', ['search' => $search, 'start_date' => $startDate, 'end_date' => $endDate]) }}" class="lg:col-span-2 text-nowrap bg-transparent hover:bg-[#0d1117]/[0.04] text-[#0d1117] p-3 rounded-[4px] focus:outline-none text-[0.875rem] border border-[#0d1117]/[0.12] hover:border-[#0d1117]/[0.24] w-fit">
             Export Excel
         </a>
     </form>
@@ -94,6 +99,11 @@
                         </td>
                     </tr>
                 @endforeach
+                <tr class="bg-white border-b border-gray-200 hover:bg-gray-50">
+                    <td colspan="7" class="px-6 py-4">
+                        Total Pengajuan: {{ count($submissions) }}
+                    </td>
+                </tr>
             @endif
             </tbody>
         </table>

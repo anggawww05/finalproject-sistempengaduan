@@ -6,16 +6,17 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use App\Models\Submission;
 use App\Models\User;
+use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
         $currentMonth = Carbon::now()->month;
-        $currentYear = Carbon::now()->year;
+        $currentYear = $request->year ?? Carbon::now()->year;
 
         $submissionYear = [];
         $submissionMonth = [];
@@ -41,9 +42,18 @@ class DashboardController extends Controller
             'Minggu 4' => [Carbon::create($currentYear, $currentMonth, 22), Carbon::create($currentYear, $currentMonth, Carbon::create($currentYear, $currentMonth)->endOfMonth()->day)],
         ];
 
-        // Submission per bulan tahun ini
-        $submissionYearValue = Submission::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
+        $years = Submission::selectRaw('YEAR(created_at) as year')
+            ->distinct()
+            ->orderBy('year', 'desc')
+            ->pluck('year');
+
+        $submissionYearValue = Submission::with('category')->selectRaw('MONTH(created_at) as month, COUNT(*) as total')
             ->whereYear('created_at', $currentYear)
+            ->when(auth()->user()->operator, function ($query) {
+                $query->whereHas('category', function ($query) {
+                    $query->where('name', auth()->user()->operator->type);
+                });
+            })
             ->groupBy(DB::raw('MONTH(created_at)'))
             ->pluck('total', 'month');
 
@@ -51,27 +61,38 @@ class DashboardController extends Controller
             $submissionYear[$monthName] = $submissionYearValue[$monthNumber] ?? 0;
         }
 
-        // Submission mingguan bulan ini
         foreach ($weeks as $label => [$start, $end]) {
             $count = Submission::whereBetween('created_at', [$start->startOfDay(), $end->endOfDay()])->count();
             $submissionMonth[$label] = $count;
         }
 
-        // Submission per kategori
-        $submissionCategory = Category::withCount('submissions')
-            ->get()
+        $submissionCategory = Category::withCount(['submissions' => function ($query) use ($currentYear) {
+            $query->whereYear('created_at', $currentYear);
+        }
+        ])->get()
             ->mapWithKeys(function ($category) {
                 return [$category->name => $category->submissions_count];
             });
 
-        // Statistik jumlah user
-        $totalStudent = User::whereNotNull('student_id')->count();
-        $totalAdmin = User::whereNotNull('admin_id')->count();
-        $totalOperator = User::whereNotNull('operator_id')->count();
+        $totalStudent = User::whereNotNull('student_id')->whereYear('created_at', $currentYear)->count();
+        $totalAdmin = User::whereNotNull('admin_id')->whereYear('created_at', $currentYear)->count();
+        $totalOperator = User::whereNotNull('operator_id')->whereYear('created_at', $currentYear)->count();
 
-        $totalSubmission = Submission::count();
-        $totalSubmissionApproved = Submission::where('status', 'approved')->count();
-        $totalSubmissionRejected = Submission::where('status', 'rejected')->count();
+        $totalSubmission = Submission::whereYear('created_at', $currentYear)->when(auth()->user()->operator, function ($query) {
+                $query->whereHas('category', function ($query) {
+                    $query->where('name', auth()->user()->operator->type);
+                });
+            })->count();
+        $totalSubmissionApproved = Submission::where('status', 'approved')->whereYear('created_at', $currentYear)->when(auth()->user()->operator, function ($query) {
+                $query->whereHas('category', function ($query) {
+                    $query->where('name', auth()->user()->operator->type);
+                });
+            })->count();
+        $totalSubmissionRejected = Submission::where('status', 'rejected')->whereYear('created_at', $currentYear)->when(auth()->user()->operator, function ($query) {
+                $query->whereHas('category', function ($query) {
+                    $query->where('name', auth()->user()->operator->type);
+                });
+            })->count();
 
         // Submission per bulan per status
         $submissionByStatusPerMonth = Submission::selectRaw('MONTH(created_at) as month, status, COUNT(*) as total')
@@ -121,6 +142,9 @@ class DashboardController extends Controller
 
             'submission_status_per_month' => $submissionStatusPerMonth,
             'user_per_month' => $userPerMonth,
+
+            'years' => $years,
+            'current_year' => $currentYear,
         ]);
     }
 }

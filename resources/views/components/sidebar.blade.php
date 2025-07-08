@@ -50,12 +50,6 @@
                         <span class="flex-1 ms-3 whitespace-nowrap text-start">Blog</span>
                     </a>
                 </li>
-                <li>
-                    <a href="{{ route('dashboard.survey.index') }}" class="cursor-pointer w-full flex items-center px-3 py-2 text-white rounded-[4px] bg-white/[0.04] hover:bg-[#CA3453] {{ Route::is('#') ? '!bg-[#CA3453]' : '' }}">
-                        <i class="fa-solid fa-file-lines"></i>
-                        <span class="flex-1 ms-3 whitespace-nowrap text-start">Laporan Survey</span>
-                    </a>
-                </li>
             @endif
             <li>
                 <form action="{{ route('logout') }}" method="POST">

@@ -3,6 +3,7 @@
 namespace App\Exports;
 
 use App\Models\Submission;
+use Illuminate\Http\Request;
 use Maatwebsite\Excel\Concerns\FromCollection;
 use Maatwebsite\Excel\Concerns\WithHeadings;
 use Maatwebsite\Excel\Concerns\WithColumnWidths;
@@ -15,6 +16,8 @@ class submissionExport implements FromCollection, WithHeadings, WithColumnWidths
     public function collection()
     {
         $search = request('search');
+        $startDate = request('start_date');
+        $endDate = request('end_date');
 
         $submissions = Submission::with(['user', 'category'])
             ->when(auth()->user()->operator, function ($query) {
@@ -29,8 +32,12 @@ class submissionExport implements FromCollection, WithHeadings, WithColumnWidths
                         ->orWhere('status', 'like', "%{$search}%")
                         ->orWhere('available', 'like', "%{$search}%");
                 });
-            })
-            ->get();
+            })->when($startDate && $endDate, function ($query) use ($startDate, $endDate) {
+                $query->whereBetween('created_at', [
+                    $startDate . ' 00:00:00',
+                    $endDate . ' 23:59:59'
+                ]);
+            })->get();
 
         return $submissions->map(function ($submission) {
             return [
