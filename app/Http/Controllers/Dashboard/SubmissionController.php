@@ -100,21 +100,51 @@ class SubmissionController extends Controller
 
     public function show(Request $request, int $id)
     {
+        // if ($request->search) {
+        //     $submissionTimelines = Timeline::with(['submission'])->where('submission_id', $id)
+        //         ->where('title', 'like', "%$request->search%")
+        //         ->orWhere('description', 'like', "%$request->search%")
+        //         ->orWhere('status', 'like', "%$request->search%")
+        //         ->latest()
+        //         ->get();
+        // } else {
+        //     $submissionTimelines = Timeline::with(['submission'])->where('submission_id', $id)->latest()->get();
+        // }
+        // return view('dashboard.submission.detail', [
+        //     'title' => 'Halaman Detail Pengajuan',
+        //     'submission' => Submission::with(['user', 'category', 'submission_post'])->where('id', $id)->firstOrFail(),
+        //     'submissionTimelines' => $submissionTimelines,
+        //     'search' => $request->search,
+        // ]);
         if ($request->search) {
-            $submissionTimelines = Timeline::with(['submission'])->where('submission_id', $id)
-                ->where('title', 'like', "%$request->search%")
-                ->orWhere('description', 'like', "%$request->search%")
-                ->orWhere('status', 'like', "%$request->search%")
+            $submissionTimelines = Timeline::with(['submission'])
+                ->where('submission_id', $id)
+                ->where(function ($query) use ($request) {
+                    $query->where('title', 'like', "%{$request->search}%")
+                        ->orWhere('description', 'like', "%{$request->search}%")
+                        ->orWhere('status', 'like', "%{$request->search}%");
+                })
                 ->latest()
                 ->get();
         } else {
-            $submissionTimelines = Timeline::with(['submission'])->where('submission_id', $id)->latest()->get();
+            $submissionTimelines = Timeline::with(['submission'])
+                ->where('submission_id', $id)
+                ->latest()
+                ->get();
         }
+
+        $hasSelesai = Timeline::where('submission_id', $id)
+            ->where('status', 'Selesai')
+            ->exists();
+
         return view('dashboard.submission.detail', [
             'title' => 'Halaman Detail Pengajuan',
-            'submission' => Submission::with(['user', 'category', 'submission_post'])->where('id', $id)->firstOrFail(),
+            'submission' => Submission::with(['user', 'category', 'submission_post'])
+                ->where('id', $id)
+                ->firstOrFail(),
             'submissionTimelines' => $submissionTimelines,
             'search' => $request->search,
+            'hasSelesai' => $hasSelesai,
         ]);
     }
 
@@ -207,6 +237,7 @@ class SubmissionController extends Controller
                 'title' => $request->title,
                 'description' => $request->description,
                 'available' => $request->available,
+                'estimated_date' => $request->estimated_date,
             ]);
 
             if ($request->available === 'public') {
@@ -289,7 +320,7 @@ class SubmissionController extends Controller
         $data = [
             'full_name' => $submission->user->student->full_name,
             'email' => $submission->user->email,
-            'message' => 'Pengajuan kamu telah '. $status .' oleh operator.',
+            'message' => 'Pengajuan kamu telah ' . $status . ' oleh operator.',
             'ticket_number' => $submission->ticket_number,
 
         ];

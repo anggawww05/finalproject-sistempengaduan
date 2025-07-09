@@ -16,7 +16,7 @@ class ProfileSubmissionController extends Controller
     public function index(Request $request): View
     {
         if ($request->search) {
-            $submissions = Submission::with(['user', 'category', 'submission_post'])
+            $submissions = Submission::with(['user', 'category', 'submission_post',])
                 ->where('user_id', auth()->user()->id)
                 ->where('ticket_number', 'like', "%$request->search%")
                 ->orWhere('title', 'like', "%$request->search%")

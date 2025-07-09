@@ -2,7 +2,7 @@
 
 @section('content')
     <section class="p-6 h-full w-[1400px] mx-auto pt-24">
-        <h2 class="w-full text-center mb-6 text-[2rem] font-semibold">Data Pengajuan Saya</h2>
+        <h2 class="w-full text-center mb-6 text-[2rem] font-semibold">Data Pengaduan Saya</h2>
         @if (session()->has('success'))
             <div class="mb-[16px] w-full text-[0.913rem] text-green-400 bg-green-400/[0.08] p-3 rounded-[3px]"
                  role="alert">
@@ -33,6 +33,9 @@
                     <td class="px-6 py-3 font-medium">
                         Status Postingan
                     </td>
+                    <td class="px-6 py-3 font-medium">
+                        Estimasi Selesai
+                    </td>
                     <td class="px-6 py-3 font-medium"></td>
                 </tr>
                 </thead>
@@ -54,6 +57,9 @@
                             </td>
                             <td class="px-6 py-4 capitalize">
                                 {{ $submission->status }}
+                            </td>
+                            <td class="px-6 py-4 capitalize">
+                                {{ $submission->estimated_date ? \Carbon\Carbon::parse($submission->estimated_date)->locale('id')->translatedFormat('j F Y') : 'Belum ada estimasi' }}
                             </td>
                             <td class="px-6 py-4 text-right flex items-center gap-[8px]">
                                 @if($submission->status === 'approved' && !$submission->survey)

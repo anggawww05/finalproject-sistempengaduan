@@ -20,7 +20,7 @@ class TrackController extends Controller
                 ->get();
         }
         return view('homepage.track.index', [
-            'title' => 'Halaman Lacak Pengajuan',
+            'title' => 'Halaman Lacak Pengaduan',
             'submissions' => $submissions,
         ]);
     }
@@ -28,7 +28,7 @@ class TrackController extends Controller
     public function show(int $id): View
     {
         return view('homepage.track.detail', [
-            'title' => 'Halaman Detail Pengajuan',
+            'title' => 'Halaman Detail Pengaduan',
             'submission' => Submission::with(['timelines' => function ($query) {
                 $query->orderBy('order', 'asc');
             }])->where('id', $id)->first(),

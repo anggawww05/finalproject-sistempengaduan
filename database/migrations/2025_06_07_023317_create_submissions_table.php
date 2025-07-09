@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('ticket_number')->nullable();
             $table->string('title');
             $table->text('description');
+            $table->date('estimated_date')->nullable();
             $table->text('survey')->nullable();
             $table->enum('status', ['pending', 'approved', 'rejected'])->default('pending');
             $table->enum('available', ['public', 'private'])->default('private');
@@ -32,6 +33,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('reports');
+        Schema::dropIfExists('submissions');
     }
 };

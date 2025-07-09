@@ -19,6 +19,12 @@
                     <div class="bg-black text-white font-bold text-lg py-2 px-4 rounded-md inline-block mb-6">
                         #{{ $submission->ticket_number }}
                     </div>
+                    @if($submission->estimated_date)
+                        <div class="mb-4">
+                            <span class="font-medium">Estimasi Selesai:</span>
+                            <span class="text-blue-700">{{ \Carbon\Carbon::parse($submission->estimated_date)->locale('id')->translatedFormat('j F Y') }}</span>
+                        </div>
+                    @endif
                     <h3 class="font-semibold text-md mb-2">Detail Status</h3>
                     <hr class="border-t border-black w-3/4 mx-auto mb-4">
                     <div class="text-sm space-y-6 text-left">
