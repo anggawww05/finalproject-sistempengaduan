@@ -14,6 +14,7 @@ class TrackController extends Controller
         $submissions = null;
         if ($request->search) {
             $submissions = Submission::with(['user', 'category', 'submission_post'])
+                ->whereNot('status', 'rejected')
                 ->where('ticket_number', 'like', "%$request->search%")
                 ->latest()
                 ->get();
