@@ -13,14 +13,26 @@ class SubmissionPostController extends Controller
 {
     public function index(Request $request): View
     {
-        if ($request->search) {
-            $submissionPosts = SubmissionPost::with(['submission.user', 'submission.category'])->where('title', 'like', "%$request->search%")
-                ->orWhere('description', 'like', "%$request->search%")
-                ->latest()
-                ->get();
-        } else {
-            $submissionPosts = SubmissionPost::latest()->get();
+        $query = SubmissionPost::with(['submission.user', 'submission.category']);
+
+        if (auth()->user()->operator_id) {
+            $operatorType = auth()->user()->operator->type ?? null;
+            if ($operatorType) {
+                $query->whereHas('submission.category', function ($q) use ($operatorType) {
+                    $q->where('name', $operatorType);
+                });
+            }
         }
+
+        if ($request->search) {
+            $query->where(function ($q) use ($request) {
+                $q->where('title', 'like', "%{$request->search}%")
+                  ->orWhere('description', 'like', "%{$request->search}%");
+            });
+        }
+
+        $submissionPosts = $query->latest()->get();
+
         return view('dashboard.submission-post.index', [
             'title' => 'Halaman Pengajuan Posting',
             'submissionPosts' => $submissionPosts,

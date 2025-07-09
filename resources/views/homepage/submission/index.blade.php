@@ -2,12 +2,11 @@
 
 @section('content')
     <div class="w-screen h-full p-30">
-        <h1 class="text-[20px] font-semibold text-center mb-8">Daftar Pengajuan</h1>
+        <h1 class="text-[20px] font-semibold text-center mb-2">Daftar Pengaduan Mahasiswa</h1>
         <div class="mb-8 flex justify-center">
-            <form method="GET" class="flex items-center">
-                <input type="text" name="search" placeholder="Cari pengaduan disini..." value="{{ $filter->search }}"
-                    class="w-96 px-4 py-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-[#A91D3A]">
-                <button type="submit" class="px-4 py-2 bg-[#A91D3A] text-white rounded-r-lg hover:bg-[#CA3453] transition">
+            <form method="GET" class="mb-4 flex items-center gap-[8px] w-full max-w-2xl">
+                <input type="text" name="search" value="{{ $filter->search }}" placeholder="Cari pengaduan disini..." class="w-full p-3 rounded-black text-[#0d1117] border border-[#0d1117]/[0.12] rounded-[4px]">
+                <button type="submit" class="bg-[#A91D3A] hover:bg-[#CA3453] text-white p-3 rounded-[4px] focus:outline-none text-[0.875rem] border w-fit">
                     Cari
                 </button>
             </form>
@@ -78,14 +77,17 @@
                     <p class="col-span-4 w-full text-center text-[0.913rem] text-[#0d1117]/[0.42] mt-8">Data pengajuan postingan tidak ada.</p>
                 @else
                     @foreach($submissionPosts as $submissionPost)
-                        <div class="bg-white h-fit rounded-xl shadow-md overflow-hidden border border-gray-200">
-                            <img class="w-full h-40 object-cover" src="{{ asset('storage/' . $submissionPost->image_path) }}" alt="Image">
-                            <div class="p-4">
-                                <h3 class="font-semibold text-lg mb-2">{{ $submissionPost->title }}</h3>
-                                <p class="text-gray-600 text-sm mb-4 line-clamp-3">{{ $submissionPost->description }}</p>
+                        <div class="bg-white rounded-lg shadow hover:shadow-lg transition-shadow duration-200 border border-gray-200 flex flex-col">
+                            <div class="w-full h-56 overflow-hidden rounded-t-lg"> {{-- h-40 -> h-56 --}}
+                                <img class="w-full h-full object-cover object-center transition-transform duration-200 hover:scale-105" src="{{ asset('storage/' . $submissionPost->image_path) }}" alt="Image">
+                            </div>
+                            <div class="flex flex-col flex-1 p-4">
+                                <h3 class="font-semibold text-base md:text-lg mb-1 md:mb-2 text-[#0d1117] line-clamp-2">{{ $submissionPost->title }}</h3>
+                                <p class="text-gray-500 text-sm mb-3 md:mb-4 line-clamp-3 flex-1">{{ $submissionPost->description }}</p>
                                 <a href="{{ route('submission.show', $submissionPost->id) }}"
-                                    class="inline-block text-white bg-[#A91D3A] hover:bg-[#CA3453] py-2 px-4 rounded">Lihat
-                                    Pengaduan</a>
+                                   class="mt-auto inline-block text-white bg-[#A91D3A] hover:bg-[#CA3453] py-2 px-4 rounded transition-colors duration-150 text-sm font-medium text-center">
+                                    Lihat Pengaduan
+                                </a>
                             </div>
                         </div>
                     @endforeach

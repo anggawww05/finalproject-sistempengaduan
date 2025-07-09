@@ -26,15 +26,15 @@
             @endif
             <div class=" bg-white rounded-lg shadow-md p-4  border-1 border-gray-300 flex flex-col gap-1">
                 <h2 class="text-[20px] font-semibold mb-2">Detail Pengaduan</h2>
-                <div class="flex gap-6">
+                <div class="flex gap-6 flex-wrap">
                     <img src="{{ asset('storage/' . $submissionPost->image_path) }}" alt="Pengaduan Image"
-                        class="w-[450px] h-[450px] object-cover rounded-lg border border-black/[0.12]">
-                    <div class="flex flex-col gap-2 w-full">
-                        <div class ="flex w-full justify-between items-center gap-2">
-                            <h3 class="text-[20px] font-semibold ">{{ $submissionPost->title }}</h3>
-                            <p class="text-gray-600 text-sm">{{ \Carbon\Carbon::parse($submissionPost->created_at)->translatedFormat('j F Y - H:i') }}</p>
+                        class="w-[350px] h-[350px] object-cover rounded-lg border border-black/[0.12] flex-shrink-0">
+                    <div class="flex flex-col gap-2 flex-1 min-w-0">
+                        <div class="flex w-full justify-between items-center gap-2">
+                            <h3 class="text-[20px] font-semibold truncate">{{ $submissionPost->title }}</h3>
+                            <p class="text-gray-600 text-sm whitespace-nowrap">{{ \Carbon\Carbon::parse($submissionPost->created_at)->translatedFormat('j F Y - H:i') }}</p>
                         </div>
-                        <p class="text-[16px] text-justify">{{ $submissionPost->description }}</p>
+                        <p class="text-[16px] text-justify break-words">{{ $submissionPost->description }}</p>
                         <p class="text-[16px] font-semibold">Kategori: {{ $submissionPost->submission->category->name }}</p>
                         <p class="text-[16px] font-semibold">Total Menyukai: {{ count($submissionPost->likes) }}</p>
                         <form action="{{ route('like.store') }}" method="POST" class="flex items-center gap-2 mt-2">

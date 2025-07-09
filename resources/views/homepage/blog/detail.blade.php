@@ -13,17 +13,17 @@
                     Kembali
                 </a>
             </div>
-            <div class=" bg-white rounded-lg shadow-md p-4  border-1 border-gray-300 flex flex-col gap-1">
+            <div class="bg-white rounded-lg shadow-md p-4 border-1 border-gray-300 flex flex-col gap-1">
                 <h2 class="text-[20px] font-semibold mb-2">Detail Blog</h2>
-                <div class="flex gap-6">
-                    <img src="{{ asset('storage/' . $blog->image_path) }}" alt="Pengaduan Image"
-                        class="w-[450px] h-[450px] object-cover rounded-lg border border-black/[0.12]">
-                    <div class="flex flex-col gap-2 w-full">
-                        <div class ="flex w-full justify-between items-center gap-2">
-                            <h3 class="text-[20px] font-semibold ">{{ $blog->title }}</h3>
-                            <p class="text-gray-600 text-sm">{{ \Carbon\Carbon::parse($blog->created_at)->translatedFormat('j F Y - H:i') }}</p>
+                <div class="flex gap-6 flex-wrap">
+                    <img src="{{ asset('storage/' . $blog->image_path) }}" alt="Blog Image"
+                        class="w-[350px] h-[350px] object-cover rounded-lg border border-black/[0.12] flex-shrink-0">
+                    <div class="flex flex-col gap-2 flex-1 min-w-0">
+                        <div class="flex w-full justify-between items-center gap-2">
+                            <h3 class="text-[20px] font-semibold truncate">{{ $blog->title }}</h3>
+                            <p class="text-gray-600 text-sm whitespace-nowrap">{{ \Carbon\Carbon::parse($blog->created_at)->translatedFormat('j F Y - H:i') }}</p>
                         </div>
-                        <p class="text-[16px] text-justify">{{ $blog->description }}</p>
+                        <p class="text-[16px] text-justify break-words">{{ $blog->description }}</p>
                     </div>
                 </div>
             </div>
