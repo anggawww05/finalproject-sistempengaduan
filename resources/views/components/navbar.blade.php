@@ -1,6 +1,6 @@
 <nav class="bg-[#0d1117] fixed w-full z-50">
     <div class="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
-        <img src="{{ asset('images/full-logo-sipma.png') }}" alt="Rekonser logo" class="h-6">
+        <img src="{{ asset('images/full-logo-sipma.png') }}" alt="Rekonser logo" class="h-8">
         <div class="flex flex-row justify-end order-2 gap-2">
             @if (!auth()->user())
                 <a href="{{ route('register.index') }}"
@@ -21,15 +21,15 @@
                 </li>
                 <li>
                     <a href="{{ route('submission.index') }}"
-                       class="block py-2 px-3 text-white bg-[#0d1117] text-[16px] hover:underline @if (Route::is('submission.*')) underline @endif">Pengajuan</a>
+                       class="block py-2 px-3 text-white bg-[#0d1117] text-[16px] hover:underline @if (Route::is('submission.*')) underline @endif">Pengaduan</a>
                 </li>
                 <li>
                     <a href="{{ route('blog.index') }}"
-                        class="block py-2 px-3 text-white bg-[#0d1117] text-[16px] hover:underline @if (Route::is('blog.*')) underline @endif">Blog</a>
+                        class="block py-2 px-3 text-white bg-[#0d1117] text-[16px] hover:underline @if (Route::is('blog.*')) underline @endif">Berita</a>
                 </li>
                 <li>
                     <a href="{{ route('track.index') }}"
-                        class="block py-2 px-3 text-white bg-[#0d1117] text-[16px] hover:underline @if (Route::is('track.*')) underline @endif">Lacak Pengajuan</a>
+                        class="block py-2 px-3 text-white bg-[#0d1117] text-[16px] hover:underline @if (Route::is('track.*')) underline @endif">Timeline Pengaduan</a>
                 </li>
             </ul>
         </div>
